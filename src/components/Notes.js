@@ -1,24 +1,15 @@
-import { useAuth } from "../context/AuthContext";
-import { collection, doc, getDoc } from "firebase/firestore";
-import { useState } from "react";
-import { db } from "../utils/firebase";
 import NotesTeacher from "../pages/NotesTeacher";
 import NotesStudent from "../pages/NotesStudent";
-import useMounted from "../hooks/useMounted";
-
+import useRole from "../hooks/useRole";
 function Notes() {
-    const mounted = useMounted();
-    const { currentUser } = useAuth();
-    const userRef = doc(collection(db, "users"), currentUser.uid);
-    // const [userData, setUserData] = useState({});
+    const role = useRole();
 
-    // getDoc(userRef).then((data) => {
-    //     setUserData(data.data());
-    // });
-
-    return (
-        // <>{userData.role === "teacher" ? <NotesTeacher /> : <NotesStudent />}</>
-        <NotesTeacher />
-    );
+    if (role === "teacher") {
+        return <NotesTeacher />;
+    } else if (role === "student") {
+        return <NotesStudent />;
+    } else {
+        return <p>loading</p>;
+    }
 }
 export default Notes;
