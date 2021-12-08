@@ -10,22 +10,15 @@ function Notes() {
     const mounted = useMounted();
     const { currentUser } = useAuth();
     const userRef = doc(collection(db, "users"), currentUser.uid);
-    const [userData, setUserData] = useState({});
+    // const [userData, setUserData] = useState({});
 
-    getDoc(userRef).then((data) => {
-        setUserData(data.data());
-    });
+    // getDoc(userRef).then((data) => {
+    //     setUserData(data.data());
+    // });
 
     return (
-        <>
-            {mounted.current && userData.role === "teacher" ? (
-                <NotesTeacher />
-            ) : userData.role === "student" ? (
-                <NotesStudent />
-            ) : (
-                userData.role === "" && <p>loading</p>
-            )}
-        </>
+        // <>{userData.role === "teacher" ? <NotesTeacher /> : <NotesStudent />}</>
+        <NotesTeacher />
     );
 }
 export default Notes;

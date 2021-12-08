@@ -23,7 +23,7 @@ import { storage, db } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useAuth } from "../context/AuthContext";
 import { useRef, useState, useEffect } from "react";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, addDoc } from "firebase/firestore";
 
 function NotesTeacher() {
     const theme = useTheme();
@@ -37,9 +37,8 @@ function NotesTeacher() {
     const [userData, setUserData] = useState({});
     const [uploadError, setUploadError] = useState({ color: "", variant: "" });
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const [fileURL, setFileURL] = useState("");
     const userRef = doc(collection(db, "users"), currentUser.uid);
-    const noteRef = doc(collection(db, "notes"), currentUser.uid);
+    const noteRef = collection(db, "notes");
     const titleRef = useRef();
     const subjectRef = useRef();
 
@@ -100,27 +99,22 @@ function NotesTeacher() {
                 storage,
                 `Notes/${userData.fName}_${titleRef.current.value}_${uploadedFile.name}`
             );
-            uploadBytes(fileRef, uploadedFile)
-                .then((snapshot) => {
-                    getDownloadURL(snapshot.ref).then((res) => setFileURL(res));
-                })
-                .then(() => {
-                    setDoc(
-                        noteRef,
-                        {
+            uploadBytes(fileRef, uploadedFile).then((snapshot) => {
+                getDownloadURL(snapshot.ref)
+                    .then((res) => {
+                        addDoc(noteRef, {
                             teacherName: `${userData.fName} ${userData.lName}`,
                             batch: currBatch,
                             course: currCourse,
                             noteTitle: titleRef.current.value,
                             subject: subjectRef.current.value,
-                            noteURL: fileURL,
-                        },
-                        { merge: true }
-                    ).then(() => setBackdropOpen(false));
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                });
+                            noteURL: res,
+                        }).then(() => setBackdropOpen(false));
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
+                    });
+            });
         }
     };
 
