@@ -15,7 +15,7 @@ function ProtectedRoute(props) {
         path === "/reset-password"
     ) {
         return currentUser ? (
-            <Redirect to={location.state?.from ?? "/dashboard"} />
+            <Redirect to={location.state?.from ?? "/profile"} />
         ) : (
             <Route {...props} />
         );

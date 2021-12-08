@@ -7,6 +7,9 @@ import {
     signOut,
     sendPasswordResetEmail,
     confirmPasswordReset,
+    verifyBeforeUpdateEmail,
+    reauthenticateWithCredential,
+    EmailAuthProvider,
 } from "firebase/auth";
 
 const AuthContext = createContext({
@@ -16,6 +19,8 @@ const AuthContext = createContext({
     signout: () => Promise,
     passwordReset: () => Promise,
     changePassword: () => Promise,
+    updateEmailId: () => Promise,
+    reAuthenticate: () => Promise,
 });
 
 export function useAuth() {
@@ -58,6 +63,18 @@ export default function AuthContextProvider({ children }) {
         return confirmPasswordReset(auth, oobCode, newPassword);
     }
 
+    function reAuthenticate(password) {
+        return reauthenticateWithCredential(
+            currentUser,
+            EmailAuthProvider.credential(currentUser.email, password)
+        );
+    }
+    function updateEmailId(newEmail) {
+        return verifyBeforeUpdateEmail(currentUser, newEmail, {
+            url: "http://localhost:3000/profile",
+        });
+    }
+
     const value = {
         currentUser,
         signup,
@@ -65,6 +82,8 @@ export default function AuthContextProvider({ children }) {
         signout,
         passwordReset,
         changePassword,
+        updateEmailId,
+        reAuthenticate,
     };
     return (
         <AuthContext.Provider value={value}>

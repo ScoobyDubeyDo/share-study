@@ -64,7 +64,7 @@ export default function SignIn() {
             setIsSubmitting(true);
             signin(emailRef.current.value, passwordRef.current.value)
                 .then(() => {
-                    history.push("/dashboard");
+                    history.push("/profile");
                 })
                 .catch((err) => handleAlert("error", err.message))
                 .finally(() => mounted.current && setIsSubmitting(false));

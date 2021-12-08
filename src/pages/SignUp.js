@@ -12,6 +12,11 @@ import {
     ToggleButton,
     ToggleButtonGroup,
     useMediaQuery,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormHelperText,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useTheme } from "@mui/material/styles";
@@ -19,6 +24,8 @@ import logo from "../images/banner.png";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import useMounted from "../hooks/useMounted";
+import { db } from "../utils/firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 export default function SignUp() {
     const { signup } = useAuth();
@@ -32,6 +39,9 @@ export default function SignUp() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
     const [role, setRole] = useState("student");
+    const [currBatch, setCurrBatch] = useState("");
+    const [currCourse, setCurrCourse] = useState("");
+    const [isStudent, setIsStudent] = useState(true);
     const [alertSeverity, setAlertSeverity] = useState("info");
     const [alertMessage, setAlertMessage] = useState("");
     const mounted = useMounted();
@@ -54,6 +64,18 @@ export default function SignUp() {
                 : "Password must has atleast 8 characters"
             : "Provide a password";
 
+        temp.batch = isStudent
+            ? currBatch === ""
+                ? "Select your Batch"
+                : ""
+            : "";
+
+        temp.course = isStudent
+            ? currCourse === ""
+                ? "Select your Course"
+                : ""
+            : "";
+
         setErrors({
             ...temp,
         });
@@ -70,6 +92,11 @@ export default function SignUp() {
         if (newRole !== null) {
             setRole(newRole);
         }
+        if (newRole === "teacher") {
+            setIsStudent(false);
+        } else if (newRole === "student") {
+            setIsStudent(true);
+        }
     };
 
     const handleSubmit = (event) => {
@@ -77,8 +104,16 @@ export default function SignUp() {
         if (validate()) {
             setIsSubmitting(true);
             signup(emailRef.current.value, passwordRef.current.value)
-                .then(() => {
-                    history.push("/dashboard");
+                .then((res) => {
+                    const userRef = doc(collection(db, "users"), res.user.uid);
+                    setDoc(userRef, {
+                        email: emailRef.current.value,
+                        fName: FnameRef.current.value,
+                        lName: LnameRef.current.value,
+                        role: role,
+                        batch: currBatch,
+                        course: currCourse,
+                    }).then(history.push("/profile"));
                 })
                 .catch((err) => handleAlert("error", err.message))
                 .finally(() => mounted.current && setIsSubmitting(false));
@@ -173,6 +208,98 @@ export default function SignUp() {
                                     </ToggleButton>
                                 </ToggleButtonGroup>
                             </Grid>
+                            {isStudent && (
+                                <>
+                                    <Grid item xs={12} sm={6}>
+                                        <FormControl
+                                            fullWidth
+                                            size={
+                                                breakpoint ? "small" : "medium"
+                                            }
+                                            error={errors.batch ? true : false}
+                                        >
+                                            <InputLabel>Batch</InputLabel>
+                                            <Select
+                                                value={currBatch}
+                                                label="Batch"
+                                                onChange={(event) => {
+                                                    setCurrBatch(
+                                                        event.target.value
+                                                    );
+                                                }}
+                                                size={
+                                                    breakpoint
+                                                        ? "small"
+                                                        : "medium"
+                                                }
+                                                disabled={!isStudent}
+                                            >
+                                                <MenuItem value={"2019-2022"}>
+                                                    2019-2022
+                                                </MenuItem>
+                                                <MenuItem value={"2020-2023"}>
+                                                    2020-2023
+                                                </MenuItem>
+                                                <MenuItem value={"2021-2024"}>
+                                                    2021-2024
+                                                </MenuItem>
+                                            </Select>
+                                            <FormHelperText
+                                                error={
+                                                    errors.batch ? true : false
+                                                }
+                                            >
+                                                {errors.batch}
+                                            </FormHelperText>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <FormControl
+                                            fullWidth
+                                            size={
+                                                breakpoint ? "small" : "medium"
+                                            }
+                                            error={errors.course ? true : false}
+                                        >
+                                            <InputLabel>Course</InputLabel>
+                                            <Select
+                                                value={currCourse}
+                                                label="Course"
+                                                onChange={(event) => {
+                                                    setCurrCourse(
+                                                        event.target.value
+                                                    );
+                                                }}
+                                                size={
+                                                    breakpoint
+                                                        ? "small"
+                                                        : "medium"
+                                                }
+                                                disabled={!isStudent}
+                                            >
+                                                <MenuItem value={"B.C.A."}>
+                                                    B.C.A.
+                                                </MenuItem>
+                                                <MenuItem value={"B.Sc.IT"}>
+                                                    B.Sc.IT
+                                                </MenuItem>
+                                                <MenuItem
+                                                    value={" B.Sc.IT(IMS)"}
+                                                >
+                                                    B.Sc.IT(IMS)
+                                                </MenuItem>
+                                            </Select>
+                                            <FormHelperText
+                                                error={
+                                                    errors.course ? true : false
+                                                }
+                                            >
+                                                {errors.course}
+                                            </FormHelperText>
+                                        </FormControl>
+                                    </Grid>
+                                </>
+                            )}
                             <Grid item xs={12}>
                                 <TextField
                                     size={breakpoint ? "small" : "medium"}

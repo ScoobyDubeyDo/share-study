@@ -3,10 +3,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
-import Dashboard from "./pages/Dashboard";
 import PasswordReset from "./pages/PasswordReset";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 import { createTheme, ThemeProvider } from "@mui/material";
+import Navbar from "./components/Navbar";
+import Notes from "./components/Notes";
 
 const theme = createTheme({
     palette: {
@@ -20,31 +22,58 @@ function App() {
             <ThemeProvider theme={theme}>
                 <Router>
                     <Switch>
-                        {/* <Route exact path="/" component={Homepage} /> */}
+                        {/* <ProtectedRoute exact path="/" component={} /> */}
                         <ProtectedRoute
                             exact
                             path="/signin"
-                            component={SignIn}
+                            render={(props) => {
+                                return (
+                                    <Navbar children={<SignIn />} {...props} />
+                                );
+                            }}
                         />
+                        <Route exact path="/signup" component={SignUp} />
                         <ProtectedRoute
                             exact
-                            path="/signup"
-                            component={SignUp}
-                        />
-                        <ProtectedRoute
-                            exact
-                            path="/dashboard"
-                            component={Dashboard}
+                            path="/profile"
+                            render={(props) => {
+                                return (
+                                    <Navbar children={<Profile />} {...props} />
+                                );
+                            }}
                         />
                         <ProtectedRoute
                             exact
                             path="/forgot-password"
-                            component={ForgotPassword}
+                            render={(props) => {
+                                return (
+                                    <Navbar
+                                        children={<ForgotPassword />}
+                                        {...props}
+                                    />
+                                );
+                            }}
                         />
                         <ProtectedRoute
                             exact
                             path="/reset-password"
-                            component={PasswordReset}
+                            render={(props) => {
+                                return (
+                                    <Navbar
+                                        children={<PasswordReset />}
+                                        {...props}
+                                    />
+                                );
+                            }}
+                        />
+                        <ProtectedRoute
+                            exact
+                            path="/notes"
+                            render={(props) => {
+                                return (
+                                    <Navbar children={<Notes />} {...props} />
+                                );
+                            }}
                         />
                         <Route exact path="*" component={NotFound} />
                     </Switch>
