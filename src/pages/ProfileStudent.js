@@ -20,7 +20,7 @@ import { db } from "../utils/firebase";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 
-function Profile() {
+function ProfileStudent() {
     const profileBase = { email: "", fName: "", lName: "", moNumber: "" };
     const { currentUser, updateEmailId, reAuthenticate } = useAuth();
     const [userData, setUserData] = useState({
@@ -153,7 +153,7 @@ function Profile() {
                 .finally(setBackdropOpen(false));
         }
     };
-    return userData.role === "student" ? (
+    return (
         <Container>
             <CssBaseline />
             <Backdrop
@@ -387,9 +387,7 @@ function Profile() {
                 </Box>
             </Box>
         </Container>
-    ) : (
-        <div>jhascgjascjaschksjchk</div>
     );
 }
 
-export default Profile;
+export default ProfileStudent;

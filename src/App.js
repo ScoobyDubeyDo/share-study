@@ -5,7 +5,7 @@ import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import PasswordReset from "./pages/PasswordReset";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/Profile";
+import Profile from "./components/Profile";
 import { createTheme, ThemeProvider } from "@mui/material";
 import Navbar from "./components/Navbar";
 import Notes from "./components/Notes";

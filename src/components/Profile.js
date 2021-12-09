@@ -1,14 +1,14 @@
-import NotesTeacher from "../pages/NotesTeacher";
-import NotesStudent from "../pages/NotesStudent";
+import ProfileTeacher from "../pages/ProfileTeacher";
+import ProfileStudent from "../pages/ProfileStudent";
 import useRole from "../hooks/useRole";
 import { Backdrop, CircularProgress } from "@mui/material";
 function Notes() {
     const role = useRole();
 
     if (role === "teacher") {
-        return <NotesTeacher />;
+        return <ProfileTeacher />;
     } else if (role === "student") {
-        return <NotesStudent />;
+        return <ProfileStudent />;
     } else {
         return (
             <Backdrop

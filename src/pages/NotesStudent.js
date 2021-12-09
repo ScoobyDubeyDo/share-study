@@ -57,7 +57,7 @@ function NotesStudent() {
                     <Masonry columns={{ xs: 1, md: 4, sm: 2 }} sx={{ m: 0 }}>
                         {notesData.map((doc, index) => {
                             return (
-                                <Card key={noteIDs[index]}>
+                                <Card key={index}>
                                     <CardContent>
                                         <Typography
                                             variant="h5"
