@@ -82,7 +82,12 @@ function ResponsiveDrawer({ children }) {
                 </ListItemButton>
                 <>
                     {role === "student" && (
-                        <ListItemButton>
+                        <ListItemButton
+                            onClick={() => {
+                                setMobileOpen(false);
+                                history.push("/submit-assignment");
+                            }}
+                        >
                             <ListItemIcon>
                                 <AssignmentTwoTone />
                             </ListItemIcon>

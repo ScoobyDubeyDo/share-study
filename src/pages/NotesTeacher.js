@@ -91,8 +91,8 @@ function NotesTeacher() {
         return Object.values(temp).every((x) => x === "");
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = (e) => {
+        e.preDefault();
         if (validate()) {
             setBackdropOpen(true);
             const fileRef = ref(
@@ -176,8 +176,8 @@ function NotesTeacher() {
                             <Select
                                 value={currBatch}
                                 label="Batch"
-                                onChange={(event) => {
-                                    setCurrBatch(event.target.value);
+                                onChange={(e) => {
+                                    setCurrBatch(e.target.value);
                                 }}
                                 size={breakpoint ? "small" : "medium"}
                             >
@@ -206,8 +206,8 @@ function NotesTeacher() {
                             <Select
                                 value={currCourse}
                                 label="Course"
-                                onChange={(event) => {
-                                    setCurrCourse(event.target.value);
+                                onChange={(e) => {
+                                    setCurrCourse(e.target.value);
                                 }}
                                 size={breakpoint ? "small" : "medium"}
                             >

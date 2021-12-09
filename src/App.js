@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import Notes from "./components/Notes";
 import UploadAssignment from "./pages/UploadAssignment";
 import ViewAssignments from "./pages/ViewAssignments";
+import SubmitAssignment from "./pages/SubmitAssignment";
 
 const theme = createTheme({
     palette: {
@@ -70,6 +71,18 @@ function App() {
                             return (
                                 <Navbar
                                     children={<ViewAssignments />}
+                                    {...props}
+                                />
+                            );
+                        }}
+                    />
+                    <ProtectedRoute
+                        exact
+                        path="/submit-assignment"
+                        render={(props) => {
+                            return (
+                                <Navbar
+                                    children={<SubmitAssignment />}
                                     {...props}
                                 />
                             );
