@@ -106,14 +106,24 @@ export default function SignUp() {
             signup(emailRef.current.value, passwordRef.current.value)
                 .then((res) => {
                     const userRef = doc(collection(db, "users"), res.user.uid);
-                    setDoc(userRef, {
-                        email: emailRef.current.value,
-                        fName: FnameRef.current.value,
-                        lName: LnameRef.current.value,
-                        role: role,
-                        batch: currBatch,
-                        course: currCourse,
-                    }).then(history.push("/profile"));
+                    if (role === "student") {
+                        setDoc(userRef, {
+                            email: emailRef.current.value,
+                            fName: FnameRef.current.value,
+                            lName: LnameRef.current.value,
+                            role: role,
+                            batch: currBatch,
+                            course: currCourse,
+                        }).then(history.push("/profile"));
+                    }
+                    if (role === "teacher") {
+                        setDoc(userRef, {
+                            email: emailRef.current.value,
+                            fName: FnameRef.current.value,
+                            lName: LnameRef.current.value,
+                            role: role,
+                        }).then(history.push("/profile"));
+                    }
                 })
                 .catch((err) => handleAlert("error", err.message))
                 .finally(() => mounted.current && setIsSubmitting(false));

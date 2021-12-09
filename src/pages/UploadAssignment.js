@@ -25,7 +25,7 @@ import { useAuth } from "../context/AuthContext";
 import { useRef, useState, useEffect } from "react";
 import { collection, doc, getDoc, addDoc } from "firebase/firestore";
 
-function NotesTeacher() {
+function UploadAssignment() {
     const theme = useTheme();
     const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
     const { currentUser } = useAuth();
@@ -38,9 +38,10 @@ function NotesTeacher() {
     const [uploadError, setUploadError] = useState({ color: "", variant: "" });
     const [backdropOpen, setBackdropOpen] = useState(false);
     const userRef = doc(collection(db, "users"), currentUser.uid);
-    const noteRef = collection(db, "notes");
+    const assignmentRef = collection(db, "assignments");
     const titleRef = useRef();
     const subjectRef = useRef();
+    const descRef = useRef();
 
     useEffect(() => {
         setBackdropOpen(true);
@@ -51,7 +52,7 @@ function NotesTeacher() {
             .then(() => setBackdropOpen(false));
     }, []);
 
-    const noteSubmit = (e) => {
+    const assignmentSubmit = (e) => {
         const file = e.target.files[0];
         if (file) {
             setUploadedFile(file);
@@ -63,13 +64,19 @@ function NotesTeacher() {
         let temp = {};
         temp.nTitle = titleRef.current.value ? "" : "Provide a title";
 
-        temp.subject = subjectRef.current.value ? "" : "Provide a subject name";
-
         temp.batch = currBatch === "" ? "Select your Batch" : "";
 
         temp.course = currCourse === "" ? "Select your Course" : "";
 
         temp.file = uploadedFile ? "" : "Upload a file";
+
+        temp.subject = subjectRef.current.value ? "" : "Provide a subject name";
+
+        temp.desc =
+            descRef.current.value.length <= 150 &&
+            descRef.current.value.length >= 10
+                ? ""
+                : "Description must be between 10 and 150 characters";
 
         if (!uploadedFile) {
             setFileName("Upload a file");
@@ -97,18 +104,22 @@ function NotesTeacher() {
             setBackdropOpen(true);
             const fileRef = ref(
                 storage,
-                `Notes/${userData.fName}_${titleRef.current.value}_${uploadedFile.name}`
+                `Assignment/${userData.fName}_${titleRef.current.value}_${uploadedFile.name}`
             );
             uploadBytes(fileRef, uploadedFile).then((snapshot) => {
                 getDownloadURL(snapshot.ref)
                     .then((res) => {
-                        addDoc(noteRef, {
+                        addDoc(assignmentRef, {
                             teacherName: `${userData.fName} ${userData.lName}`,
+                            // emID: userData.emID,
+                            uid: currentUser.uid,
                             batch: currBatch,
                             course: currCourse,
-                            noteTitle: titleRef.current.value,
+                            title: titleRef.current.value,
                             subject: subjectRef.current.value,
-                            noteURL: res,
+                            desc: descRef.current.value,
+                            assignnmentURL: res,
+                            submissionData: [],
                         }).then(() => setBackdropOpen(false));
                     })
                     .catch((err) => {
@@ -141,9 +152,9 @@ function NotesTeacher() {
                             size={breakpoint ? "small" : "medium"}
                             required
                             fullWidth
-                            id="noteTitle"
-                            label="Note Title"
-                            name="noteTitle"
+                            id="assignmentTitle"
+                            label="Assignment Title"
+                            name="assignmentTitle"
                             inputRef={titleRef}
                             {...(errors.nTitle && {
                                 error: true,
@@ -163,6 +174,24 @@ function NotesTeacher() {
                             {...(errors.subject && {
                                 error: true,
                                 helperText: errors.subject,
+                            })}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            size={breakpoint ? "small" : "medium"}
+                            required
+                            fullWidth
+                            id="assignmentDesc"
+                            label="Assignment description"
+                            name="assignmentDesc"
+                            inputRef={descRef}
+                            multiline
+                            maxRows={4}
+                            minRows={4}
+                            {...(errors.desc && {
+                                error: true,
+                                helperText: errors.desc,
                             })}
                         />
                     </Grid>
@@ -237,11 +266,11 @@ function NotesTeacher() {
                                 <Input
                                     accept="application/pdf"
                                     sx={{ display: "none" }}
-                                    id="noteFile"
+                                    id="assFile"
                                     type="file"
-                                    onChange={(e) => noteSubmit(e)}
+                                    onChange={(e) => assignmentSubmit(e)}
                                 />
-                                <FormLabel htmlFor="noteFile">
+                                <FormLabel htmlFor="assFile">
                                     <Button
                                         variant={
                                             uploadError.variant
@@ -277,4 +306,4 @@ function NotesTeacher() {
     );
 }
 
-export default NotesTeacher;
+export default UploadAssignment;

@@ -154,239 +154,269 @@ function ProfileStudent() {
         }
     };
     return (
-        <Container>
-            <CssBaseline />
-            <Backdrop
-                sx={{
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                }}
-                open={backdropOpen}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-            <Box maxWidth="md" sx={{ m: "auto" }}>
-                {alertMessage && (
-                    <Alert
-                        variant="filled"
-                        sx={{ m: 1 }}
-                        severity={alertSeverity}
-                        children={alertMessage}
-                    />
-                )}
+        <>
+            {userData.role && (
+                <Container>
+                    <CssBaseline />
+                    <Backdrop
+                        sx={{
+                            zIndex: (theme) => theme.zIndex.drawer + 1,
+                        }}
+                        open={backdropOpen}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                    <Box maxWidth="md" sx={{ m: "auto" }}>
+                        {alertMessage && (
+                            <Alert
+                                variant="filled"
+                                sx={{ m: 1 }}
+                                severity={alertSeverity}
+                                children={alertMessage}
+                            />
+                        )}
 
-                <Box component="form" noValidate onSubmit={handleSubmit}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                autoComplete="given-name"
-                                name="firstName"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                inputRef={FnameRef}
-                                defaultValue={userData.fName}
-                                disabled={formDisable}
-                                {...(errors.Fname && {
-                                    error: true,
-                                    helperText: errors.Fname,
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="family-name"
-                                inputRef={LnameRef}
-                                defaultValue={userData.lName}
-                                disabled={formDisable}
-                                {...(errors.Lname && {
-                                    error: true,
-                                    helperText: errors.Lname,
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                inputRef={emailRef}
-                                defaultValue={userData.email}
-                                disabled={formDisable}
-                                {...(errors.email && {
-                                    error: true,
-                                    helperText: errors.email,
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                type="number"
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                name="enrollmentNumber"
-                                required
-                                fullWidth
-                                id="enrollmentNumber"
-                                label="enrollment Number"
-                                inputRef={enNumberRef}
-                                defaultValue={userData.enNumber}
-                                disabled={formDisable}
-                                {...(errors.enNumber && {
-                                    error: true,
-                                    helperText: errors.enNumber,
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                type="number"
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                name="mobileNumber"
-                                required
-                                fullWidth
-                                id="mobileNumber"
-                                label="Mobile Number"
-                                inputRef={moNumberRef}
-                                defaultValue={userData.moNumber}
-                                disabled={formDisable}
-                                {...(errors.moNumber && {
-                                    error: true,
-                                    helperText: errors.moNumber,
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl
-                                fullWidth
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                disabled={formDisable}
-                                error={errors.batch ? true : false}
-                            >
-                                <InputLabel>Batch</InputLabel>
-                                <Select
-                                    value={currBatch}
-                                    label="Batch"
-                                    onChange={(event) => {
-                                        setCurrBatch(event.target.value);
-                                    }}
-                                    size={breakpoint ? "small" : "medium"}
+                        <Box
+                            component="form"
+                            noValidate
+                            onSubmit={handleSubmit}
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        autoComplete="given-name"
+                                        name="firstName"
+                                        required
+                                        fullWidth
+                                        id="firstName"
+                                        label="First Name"
+                                        inputRef={FnameRef}
+                                        defaultValue={userData.fName}
+                                        disabled={formDisable}
+                                        {...(errors.Fname && {
+                                            error: true,
+                                            helperText: errors.Fname,
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        required
+                                        fullWidth
+                                        id="lastName"
+                                        label="Last Name"
+                                        name="lastName"
+                                        autoComplete="family-name"
+                                        inputRef={LnameRef}
+                                        defaultValue={userData.lName}
+                                        disabled={formDisable}
+                                        {...(errors.Lname && {
+                                            error: true,
+                                            helperText: errors.Lname,
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        required
+                                        fullWidth
+                                        id="email"
+                                        label="Email Address"
+                                        name="email"
+                                        autoComplete="email"
+                                        inputRef={emailRef}
+                                        defaultValue={userData.email}
+                                        disabled={formDisable}
+                                        {...(errors.email && {
+                                            error: true,
+                                            helperText: errors.email,
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        type="number"
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        name="enrollmentNumber"
+                                        required
+                                        fullWidth
+                                        id="enrollmentNumber"
+                                        label="enrollment Number"
+                                        inputRef={enNumberRef}
+                                        defaultValue={userData.enNumber}
+                                        disabled={formDisable}
+                                        {...(errors.enNumber && {
+                                            error: true,
+                                            helperText: errors.enNumber,
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        type="number"
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        name="mobileNumber"
+                                        required
+                                        fullWidth
+                                        id="mobileNumber"
+                                        label="Mobile Number"
+                                        inputRef={moNumberRef}
+                                        defaultValue={userData.moNumber}
+                                        disabled={formDisable}
+                                        {...(errors.moNumber && {
+                                            error: true,
+                                            helperText: errors.moNumber,
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <FormControl
+                                        fullWidth
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        disabled={formDisable}
+                                        error={errors.batch ? true : false}
+                                    >
+                                        <InputLabel>Batch</InputLabel>
+                                        <Select
+                                            value={currBatch}
+                                            label="Batch"
+                                            onChange={(event) => {
+                                                setCurrBatch(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            size={
+                                                breakpoint ? "small" : "medium"
+                                            }
+                                        >
+                                            <MenuItem value={"2019-2022"}>
+                                                2019-2022
+                                            </MenuItem>
+                                            <MenuItem value={"2020-2023"}>
+                                                2020-2023
+                                            </MenuItem>
+                                            <MenuItem value={"2021-2024"}>
+                                                2021-2024
+                                            </MenuItem>
+                                        </Select>
+                                        <FormHelperText
+                                            error={errors.batch ? true : false}
+                                        >
+                                            {errors.batch}
+                                        </FormHelperText>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <FormControl
+                                        fullWidth
+                                        margin="normal"
+                                        size={breakpoint ? "small" : "medium"}
+                                        disabled={formDisable}
+                                        error={errors.course ? true : false}
+                                    >
+                                        <InputLabel>Course</InputLabel>
+                                        <Select
+                                            value={currCourse}
+                                            label="Course"
+                                            onChange={(event) => {
+                                                setCurrCourse(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            size={
+                                                breakpoint ? "small" : "medium"
+                                            }
+                                        >
+                                            <MenuItem value={"B.C.A."}>
+                                                B.C.A.
+                                            </MenuItem>
+                                            <MenuItem value={"B.Sc.IT"}>
+                                                B.Sc.IT
+                                            </MenuItem>
+                                            <MenuItem value={" B.Sc.IT(IMS)"}>
+                                                B.Sc.IT(IMS)
+                                            </MenuItem>
+                                        </Select>
+                                        <FormHelperText
+                                            error={errors.course ? true : false}
+                                        >
+                                            {errors.course}
+                                        </FormHelperText>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        size={breakpoint ? "small" : "medium"}
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="new-password"
+                                        disabled={formDisable}
+                                        inputRef={passwordRef}
+                                        {...(errors.password && {
+                                            error: true,
+                                            helperText: errors.password,
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    sx={{ textAlign: { sm: "end" } }}
                                 >
-                                    <MenuItem value={"2019-2022"}>
-                                        2019-2022
-                                    </MenuItem>
-                                    <MenuItem value={"2020-2023"}>
-                                        2020-2023
-                                    </MenuItem>
-                                    <MenuItem value={"2021-2024"}>
-                                        2021-2024
-                                    </MenuItem>
-                                </Select>
-                                <FormHelperText
-                                    error={errors.batch ? true : false}
-                                >
-                                    {errors.batch}
-                                </FormHelperText>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl
-                                fullWidth
-                                margin="normal"
-                                size={breakpoint ? "small" : "medium"}
-                                disabled={formDisable}
-                                error={errors.course ? true : false}
-                            >
-                                <InputLabel>Course</InputLabel>
-                                <Select
-                                    value={currCourse}
-                                    label="Course"
-                                    onChange={(event) => {
-                                        setCurrCourse(event.target.value);
-                                    }}
-                                    size={breakpoint ? "small" : "medium"}
-                                >
-                                    <MenuItem value={"B.C.A."}>B.C.A.</MenuItem>
-                                    <MenuItem value={"B.Sc.IT"}>
-                                        B.Sc.IT
-                                    </MenuItem>
-                                    <MenuItem value={" B.Sc.IT(IMS)"}>
-                                        B.Sc.IT(IMS)
-                                    </MenuItem>
-                                </Select>
-                                <FormHelperText
-                                    error={errors.course ? true : false}
-                                >
-                                    {errors.course}
-                                </FormHelperText>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                size={breakpoint ? "small" : "medium"}
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="new-password"
-                                disabled={formDisable}
-                                inputRef={passwordRef}
-                                {...(errors.password && {
-                                    error: true,
-                                    helperText: errors.password,
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sx={{ textAlign: { sm: "end" } }}>
-                            {switchButtons ? (
-                                <Button
-                                    variant="contained"
-                                    fullWidth={breakpoint ? true : false}
-                                    type="submit"
-                                    onClick={() => {
-                                        setFormDisable(false);
-                                        setSwitchButtons(!switchButtons);
-                                    }}
-                                >
-                                    Edit Profile
-                                </Button>
-                            ) : (
-                                <Button
-                                    variant="contained"
-                                    fullWidth={breakpoint ? true : false}
-                                    onClick={() => {
-                                        if (validate()) {
-                                            setFormDisable(true);
-                                            setSwitchButtons(!switchButtons);
-                                        }
-                                    }}
-                                >
-                                    Save Profile
-                                </Button>
-                            )}
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Box>
-        </Container>
+                                    {switchButtons ? (
+                                        <Button
+                                            variant="contained"
+                                            fullWidth={
+                                                breakpoint ? true : false
+                                            }
+                                            type="submit"
+                                            onClick={() => {
+                                                setFormDisable(false);
+                                                setSwitchButtons(
+                                                    !switchButtons
+                                                );
+                                            }}
+                                        >
+                                            Edit Profile
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="contained"
+                                            fullWidth={
+                                                breakpoint ? true : false
+                                            }
+                                            onClick={() => {
+                                                if (validate()) {
+                                                    setFormDisable(true);
+                                                    setSwitchButtons(
+                                                        !switchButtons
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            Save Profile
+                                        </Button>
+                                    )}
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Box>
+                </Container>
+            )}
+        </>
     );
 }
 

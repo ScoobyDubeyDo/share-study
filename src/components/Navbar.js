@@ -20,15 +20,19 @@ import {
     LogoutTwoTone,
     QuizTwoTone,
     AccountBoxTwoTone,
+    AssignmentTurnedInTwoTone,
+    UploadFileTwoTone,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/banner.png";
 import { useLocation, useHistory } from "react-router-dom";
+import useRole from "../hooks/useRole";
 
 const drawerWidth = 240;
 
 function ResponsiveDrawer({ children }) {
+    const role = useRole();
     const history = useHistory();
     const location = useLocation();
     const { signout } = useAuth();
@@ -76,12 +80,44 @@ function ResponsiveDrawer({ children }) {
                     </ListItemIcon>
                     <ListItemText primary={"Notes"} />
                 </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <AssignmentTwoTone />
-                    </ListItemIcon>
-                    <ListItemText primary={"Assignments"} />
-                </ListItemButton>
+                <>
+                    {role === "student" && (
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <AssignmentTwoTone />
+                            </ListItemIcon>
+                            <ListItemText primary={"Assignments"} />
+                        </ListItemButton>
+                    )}
+                </>
+                <>
+                    {role === "teacher" && (
+                        <>
+                            <ListItemButton
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    history.push("/upload-assignment");
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <UploadFileTwoTone />
+                                </ListItemIcon>
+                                <ListItemText primary={"Upload Assignment"} />
+                            </ListItemButton>
+                            <ListItemButton
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    history.push("/view-assignment");
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <AssignmentTurnedInTwoTone />
+                                </ListItemIcon>
+                                <ListItemText primary={"View Assignments"} />
+                            </ListItemButton>
+                        </>
+                    )}
+                </>
                 <ListItemButton onClick={async () => signout()}>
                     <ListItemIcon>
                         <LogoutTwoTone />

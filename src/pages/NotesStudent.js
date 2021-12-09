@@ -21,22 +21,18 @@ function NotesStudent() {
     const [backdropOpen, setBackdropOpen] = useState(false);
     const noteRef = collection(db, "notes");
     const [notesData, setNotesData] = useState([]);
-    const [noteIDs, setNoteIDs] = useState([]);
 
     useEffect(() => {
         let assr = [];
-        let noteKey = [];
         setBackdropOpen(true);
         getDocs(noteRef)
             .then((data) => {
                 data.forEach((doc) => {
                     assr.push(doc.data());
-                    noteKey.push(doc.id);
                 });
             })
             .then(() => {
                 setNotesData([...assr]);
-                setNoteIDs([...noteKey]);
                 setBackdropOpen(false);
             });
     }, []);
