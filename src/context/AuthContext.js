@@ -71,7 +71,7 @@ export default function AuthContextProvider({ children }) {
     }
     function updateEmailId(newEmail) {
         return verifyBeforeUpdateEmail(currentUser, newEmail, {
-            url: "http://localhost:3000/profile",
+            url: "http://localhost:3000/",
         });
     }
 

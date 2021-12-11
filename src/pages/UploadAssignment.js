@@ -75,7 +75,9 @@ function UploadAssignment() {
         temp.desc =
             descRef.current.value.length <= 150 &&
             descRef.current.value.length >= 10
-                ? ""
+                ? descRef.current.value.includes("  ")
+                    ? "Description can't be empty"
+                    : ""
                 : "Description must be between 10 and 150 characters";
 
         if (!uploadedFile) {

@@ -114,7 +114,7 @@ export default function SignUp() {
                             role: role,
                             batch: currBatch,
                             course: currCourse,
-                        }).then(history.push("/profile"));
+                        }).then(history.push("/"));
                     }
                     if (role === "teacher") {
                         setDoc(userRef, {
@@ -122,7 +122,7 @@ export default function SignUp() {
                             fName: FnameRef.current.value,
                             lName: LnameRef.current.value,
                             role: role,
-                        }).then(history.push("/profile"));
+                        }).then(history.push("/"));
                     }
                 })
                 .catch((err) => handleAlert("error", err.message))

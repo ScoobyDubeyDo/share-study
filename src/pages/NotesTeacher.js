@@ -41,6 +41,7 @@ function NotesTeacher() {
     const noteRef = collection(db, "notes");
     const titleRef = useRef();
     const subjectRef = useRef();
+    const descRef = useRef();
 
     useEffect(() => {
         setBackdropOpen(true);
@@ -71,6 +72,14 @@ function NotesTeacher() {
 
         temp.file = uploadedFile ? "" : "Upload a file";
 
+        temp.desc =
+            descRef.current.value.length <= 150 &&
+            descRef.current.value.length >= 10
+                ? descRef.current.value.includes("  ")
+                    ? "Description can't be empty"
+                    : ""
+                : "Description must be between 10 and 150 characters";
+
         if (!uploadedFile) {
             setFileName("Upload a file");
             setUploadError({
@@ -92,7 +101,7 @@ function NotesTeacher() {
     };
 
     const handleSubmit = (e) => {
-        e.preDefault();
+        e.preventDefault();
         if (validate()) {
             setBackdropOpen(true);
             const fileRef = ref(
@@ -109,7 +118,10 @@ function NotesTeacher() {
                             noteTitle: titleRef.current.value,
                             subject: subjectRef.current.value,
                             noteURL: res,
-                        }).then(() => setBackdropOpen(false));
+                            desc: descRef.current.value,
+                        }).then(() => {
+                            
+                            setBackdropOpen(false)});
                     })
                     .catch((err) => {
                         console.log(err.message);
@@ -163,6 +175,24 @@ function NotesTeacher() {
                             {...(errors.subject && {
                                 error: true,
                                 helperText: errors.subject,
+                            })}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            size={breakpoint ? "small" : "medium"}
+                            required
+                            fullWidth
+                            id="noteDesc"
+                            label="Note description"
+                            name="noteDesc"
+                            inputRef={descRef}
+                            multiline
+                            maxRows={4}
+                            minRows={4}
+                            {...(errors.desc && {
+                                error: true,
+                                helperText: errors.desc,
                             })}
                         />
                     </Grid>

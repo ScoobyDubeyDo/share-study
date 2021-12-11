@@ -1,8 +1,6 @@
-import { useRef, useState, useEffect } from "react";
-import { storage, db } from "../utils/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useAuth } from "../context/AuthContext";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db } from "../utils/firebase";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import {
     Button,
     Card,
@@ -17,25 +15,40 @@ import {
 } from "@mui/material";
 import { Masonry } from "@mui/lab";
 import { SentimentVeryDissatisfiedTwoTone } from "@mui/icons-material";
+import { useAuth } from "../context/AuthContext";
+
 function NotesStudent() {
+    const { currentUser } = useAuth();
+
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const noteRef = collection(db, "notes");
     const [notesData, setNotesData] = useState([]);
+    const [userData, setUserData] = useState({});
 
     useEffect(() => {
+        const noteRef = collection(db, "notes");
+        const userRef = doc(collection(db, "users"), currentUser.uid);
         let assr = [];
         setBackdropOpen(true);
+        getDoc(userRef).then((data) => {
+            setUserData(data.data());
+        });
         getDocs(noteRef)
             .then((data) => {
                 data.forEach((doc) => {
-                    assr.push(doc.data());
+                    // assr.push(doc.data());
+                    if (
+                        doc.data().batch === userData.batch &&
+                        doc.data().course === userData.course
+                    ) {
+                        assr.push(doc.data());
+                    }
                 });
             })
             .then(() => {
                 setNotesData([...assr]);
                 setBackdropOpen(false);
             });
-    }, []);
+    }, [currentUser.uid]);
 
     return (
         <Container sx={{ width: "90vw" }} disableGutters>
@@ -49,7 +62,7 @@ function NotesStudent() {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Box maxWidth="md" sx={{ mx: "auto", my: 2 }}>
-                {notesData ? (
+                {notesData.length > 0 ? (
                     <Masonry columns={{ xs: 1, md: 4, sm: 2 }} sx={{ m: 0 }}>
                         {notesData.map((doc, index) => {
                             return (
@@ -63,7 +76,6 @@ function NotesStudent() {
                                             {doc.noteTitle}
                                         </Typography>
                                         <Typography
-                                            // sx={{ display: "inline-block" }}
                                             variant="body2"
                                             gutterBottom
                                             color="text.secondary"
@@ -71,12 +83,7 @@ function NotesStudent() {
                                             {`${doc.teacherName} • ${doc.subject}`}
                                         </Typography>
                                         <Typography variant="body1">
-                                            Lorem ipsum dolor sit amet
-                                            consectetur adipisicing elit. Quos
-                                            culpa at eius delectus neque
-                                            perspiciatis illum ad ipsraesentium
-                                            voluptate nulla, sit delectus fugit
-                                            aut, tempore illo!
+                                            {doc.desc}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
@@ -106,6 +113,7 @@ function NotesStudent() {
                     </Card>
                 )}
             </Box>
+            {console.log(notesData.length)}
         </Container>
     );
 }

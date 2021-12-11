@@ -37,7 +37,6 @@ function ProfileStudent() {
     const [alertMessage, setAlertMessage] = useState("");
     const [currBatch, setCurrBatch] = useState("");
     const [currCourse, setCurrCourse] = useState("");
-    const [asdf, setAsdf] = useState(false);
     const FnameRef = useRef();
     const LnameRef = useRef();
     const emailRef = useRef();
@@ -50,16 +49,10 @@ function ProfileStudent() {
 
     useEffect(() => {
         setBackdropOpen(true);
-        getDoc(userRef)
-            .then((data) => {
-                setUserData(data.data());
-                setBackdropOpen(false);
-            })
-            .then(() => {
-                setAsdf(true);
-                setCurrBatch(userData.batch);
-                setCurrCourse(userData.course);
-            });
+        getDoc(userRef).then((data) => {
+            setUserData(data.data());
+            setBackdropOpen(false);
+        });
     }, []);
 
     const handleAlert = (severity, message) => {
@@ -278,84 +271,33 @@ function ProfileStudent() {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <FormControl
-                                        fullWidth
-                                        margin="normal"
+                                    <TextField
                                         size={breakpoint ? "small" : "medium"}
-                                        disabled={formDisable}
-                                        error={errors.batch ? true : false}
-                                    >
-                                        <InputLabel>Batch</InputLabel>
-                                        <Select
-                                            value={currBatch}
-                                            label="Batch"
-                                            onChange={(event) => {
-                                                setCurrBatch(
-                                                    event.target.value
-                                                );
-                                            }}
-                                            size={
-                                                breakpoint ? "small" : "medium"
-                                            }
-                                        >
-                                            <MenuItem value={"2019-2022"}>
-                                                2019-2022
-                                            </MenuItem>
-                                            <MenuItem value={"2020-2023"}>
-                                                2020-2023
-                                            </MenuItem>
-                                            <MenuItem value={"2021-2024"}>
-                                                2021-2024
-                                            </MenuItem>
-                                        </Select>
-                                        <FormHelperText
-                                            error={errors.batch ? true : false}
-                                        >
-                                            {errors.batch}
-                                        </FormHelperText>
-                                    </FormControl>
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        label="Batch"
+                                        type="text"
+                                        disabled
+                                        defaultValue={userData.batch}
+                                    />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <FormControl
-                                        fullWidth
-                                        margin="normal"
+                                    <TextField
                                         size={breakpoint ? "small" : "medium"}
-                                        disabled={formDisable}
-                                        error={errors.course ? true : false}
-                                    >
-                                        <InputLabel>Course</InputLabel>
-                                        <Select
-                                            value={currCourse}
-                                            label="Course"
-                                            onChange={(event) => {
-                                                setCurrCourse(
-                                                    event.target.value
-                                                );
-                                            }}
-                                            size={
-                                                breakpoint ? "small" : "medium"
-                                            }
-                                        >
-                                            <MenuItem value={"B.C.A."}>
-                                                B.C.A.
-                                            </MenuItem>
-                                            <MenuItem value={"B.Sc.IT"}>
-                                                B.Sc.IT
-                                            </MenuItem>
-                                            <MenuItem value={" B.Sc.IT(IMS)"}>
-                                                B.Sc.IT(IMS)
-                                            </MenuItem>
-                                        </Select>
-                                        <FormHelperText
-                                            error={errors.course ? true : false}
-                                        >
-                                            {errors.course}
-                                        </FormHelperText>
-                                    </FormControl>
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        label="Course"
+                                        type="text"
+                                        disabled
+                                        defaultValue={userData.course}
+                                    />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
                                         size={breakpoint ? "small" : "medium"}
+                                        margin="normal"
                                         required
                                         fullWidth
                                         name="password"

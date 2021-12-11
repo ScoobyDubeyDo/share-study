@@ -1,9 +1,7 @@
-import { collection, getDocs } from "@firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "@firebase/firestore";
 import {
-    ArrowDropDownCircleTwoTone,
     ArrowRightTwoTone,
     AssignmentTurnedInTwoTone,
-    RefreshTwoTone,
 } from "@mui/icons-material";
 import { Masonry } from "@mui/lab";
 import {
@@ -18,31 +16,35 @@ import {
     CssBaseline,
     Divider,
     Grid,
-    IconButton,
     Typography,
 } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
-import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { db } from "../utils/firebase";
+import { useAuth } from "../context/AuthContext";
 
 function ViewAssignments() {
+    const { currentUser } = useAuth();
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [assiData, setAssiData] = useState([]);
-
+    const [userData, setUserData] = useState({});
     const assignmentRef = collection(db, "assignments");
+    const userRef = doc(collection(db, "users"), currentUser.uid);
 
     useEffect(() => {
-        let ass = [];
+        let assign = [];
         setBackdropOpen(true);
+        getDoc(userRef).then((data) => {
+            setUserData(data.data());
+        });
         getDocs(assignmentRef)
             .then((data) => {
                 data.forEach((doc) => {
-                    ass.push(doc.data());
+                    assign.push(doc.data());
                 });
             })
             .then(() => {
-                setAssiData([...ass]);
+                setAssiData([...assign]);
                 setBackdropOpen(false);
             });
     }, []);
@@ -61,12 +63,22 @@ function ViewAssignments() {
             <Grid container spacing={2}>
                 {assiData ? (
                     assiData.map((doc, index) => {
-                        return <AssignmentReview key={index} doc={doc} />;
+                        if (doc.uid === currentUser.uid) {
+                            return <AssignmentReview key={index} doc={doc} />;
+                        }
                     })
                 ) : (
-                    <>
-                        <Card>No assignments available</Card>
-                    </>
+                    <Card>
+                        <CardContent>
+                            <Typography
+                                variant="h5"
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                No assignments available
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 )}
             </Grid>
         </Container>

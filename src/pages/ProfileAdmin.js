@@ -15,7 +15,7 @@ import { db } from "../utils/firebase";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 
-function ProfileTeacher() {
+function ProfileAdmin() {
     const profileBase = { email: "", fName: "", lName: "", moNumber: "" };
     const { currentUser, updateEmailId, reAuthenticate } = useAuth();
     const [userData, setUserData] = useState({
@@ -323,4 +323,4 @@ function ProfileTeacher() {
     );
 }
 
-export default ProfileTeacher;
+export default ProfileAdmin;

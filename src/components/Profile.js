@@ -2,6 +2,7 @@ import ProfileTeacher from "../pages/ProfileTeacher";
 import ProfileStudent from "../pages/ProfileStudent";
 import useRole from "../hooks/useRole";
 import { Backdrop, CircularProgress } from "@mui/material";
+import ProfileAdmin from "../pages/ProfileAdmin";
 function Notes() {
     const role = useRole();
 
@@ -9,6 +10,8 @@ function Notes() {
         return <ProfileTeacher />;
     } else if (role === "student") {
         return <ProfileStudent />;
+    } else if (role === "admin") {
+        return <ProfileAdmin />;
     } else {
         return (
             <Backdrop
