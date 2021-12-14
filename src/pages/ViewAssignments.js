@@ -1,7 +1,13 @@
-import { collection, getDocs, doc, getDoc } from "@firebase/firestore";
+import {
+    collection,
+    getDocs,
+    doc as fsDoc,
+    deleteDoc,
+} from "@firebase/firestore";
 import {
     ArrowRightTwoTone,
     AssignmentTurnedInTwoTone,
+    DeleteForeverTwoTone,
 } from "@mui/icons-material";
 import { Masonry } from "@mui/lab";
 import {
@@ -10,12 +16,19 @@ import {
     Card,
     CardActions,
     CardContent,
+    CardHeader,
     CircularProgress,
     Collapse,
     Container,
     CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider,
     Grid,
+    IconButton,
     Typography,
 } from "@mui/material";
 import { blueGrey } from "@mui/material/colors";
@@ -27,20 +40,15 @@ function ViewAssignments() {
     const { currentUser } = useAuth();
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [assiData, setAssiData] = useState([]);
-    const [userData, setUserData] = useState({});
-    const assignmentRef = collection(db, "assignments");
-    const userRef = doc(collection(db, "users"), currentUser.uid);
 
     useEffect(() => {
+        const assignmentRef = collection(db, "assignments");
         let assign = [];
         setBackdropOpen(true);
-        getDoc(userRef).then((data) => {
-            setUserData(data.data());
-        });
         getDocs(assignmentRef)
             .then((data) => {
                 data.forEach((doc) => {
-                    assign.push(doc.data());
+                    assign.push({ id: doc.id, ...doc.data() });
                 });
             })
             .then(() => {
@@ -66,19 +74,22 @@ function ViewAssignments() {
                         if (doc.uid === currentUser.uid) {
                             return <AssignmentReview key={index} doc={doc} />;
                         }
+                        return null;
                     })
                 ) : (
-                    <Card>
-                        <CardContent>
-                            <Typography
-                                variant="h5"
-                                color="text.secondary"
-                                gutterBottom
-                            >
-                                No assignments available
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <Typography
+                                    variant="h5"
+                                    color="text.secondary"
+                                    gutterBottom
+                                >
+                                    No assignments available
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 )}
             </Grid>
         </Container>
@@ -87,25 +98,53 @@ function ViewAssignments() {
 
 const AssignmentReview = ({ doc }) => {
     const [expanded, setExpanded] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     return (
         <Grid item xs={12}>
             <Card>
+                <CardHeader
+                    action={
+                        <IconButton
+                            onClick={() => {
+                                setDeleteDialogOpen(true);
+                            }}
+                        >
+                            <DeleteForeverTwoTone />
+                        </IconButton>
+                    }
+                    title={doc.title}
+                    subheader={`${doc.subject} • ${doc.course} • ${doc.batch}`}
+                />
+                <Dialog open={deleteDialogOpen}>
+                    <DialogTitle id="alert-dialog-title">
+                        {"Delete the Assignment?"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            The file and all submission data related to it will
+                            be permanently deleted from our database.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={() => {
+                                setDeleteDialogOpen(false);
+                            }}
+                            autoFocus
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                deleteDoc(fsDoc(db, "assignments", doc.id));
+                            }}
+                        >
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 <CardContent>
-                    <Typography
-                        variant="h5"
-                        color="text.secondary"
-                        gutterBottom
-                    >
-                        {doc.title}
-                    </Typography>
-                    <Typography
-                        variant="body2"
-                        gutterBottom
-                        color="text.secondary"
-                    >
-                        {`${doc.subject} • ${doc.course} • ${doc.batch}`}
-                    </Typography>
                     <Typography variant="body1">{doc.desc}</Typography>
                 </CardContent>
                 <CardActions

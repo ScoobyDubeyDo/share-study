@@ -44,7 +44,7 @@ function ProfileAdmin() {
             setUserData(data.data());
             setBackdropOpen(false);
         });
-    }, []);
+    }, [currentUser]);
 
     const handleAlert = (severity, message) => {
         setAlertMessage(message);

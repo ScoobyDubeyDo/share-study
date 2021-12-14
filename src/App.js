@@ -27,7 +27,6 @@ function App() {
             <ThemeProvider theme={theme}>
                 <Router>
                     <Switch>
-                        {/* <ProtectedRoute exact path="/" component={} /> */}
                         <ProtectedRoute
                             exact
                             path="/signin"

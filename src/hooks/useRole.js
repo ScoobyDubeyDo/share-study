@@ -5,10 +5,10 @@ import { db } from "../utils/firebase";
 
 function useRole() {
     const { currentUser } = useAuth();
-    const userRef = doc(collection(db, "users"), currentUser.uid);
     const [userData, setUserData] = useState({});
 
     useEffect(() => {
+        const userRef = doc(collection(db, "users"), currentUser.uid);
         getDoc(userRef).then((data) => {
             setUserData(data.data());
         });
@@ -16,7 +16,7 @@ function useRole() {
         return () => {
             console.log("clean");
         };
-    }, []);
+    }, [currentUser.uid]);
 
     return userData.role;
 }

@@ -37,20 +37,20 @@ function UploadAssignment() {
     const [userData, setUserData] = useState({});
     const [uploadError, setUploadError] = useState({ color: "", variant: "" });
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const userRef = doc(collection(db, "users"), currentUser.uid);
     const assignmentRef = collection(db, "assignments");
     const titleRef = useRef();
     const subjectRef = useRef();
     const descRef = useRef();
 
     useEffect(() => {
+        const userRef = doc(collection(db, "users"), currentUser.uid);
         setBackdropOpen(true);
         getDoc(userRef)
             .then((data) => {
                 setUserData(data.data());
             })
             .then(() => setBackdropOpen(false));
-    }, []);
+    }, [currentUser]);
 
     const assignmentSubmit = (e) => {
         const file = e.target.files[0];

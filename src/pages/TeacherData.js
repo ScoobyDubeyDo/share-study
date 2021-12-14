@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../utils/firebase";
 import { useAuth } from "../context/AuthContext";
@@ -20,17 +20,13 @@ import { PersonRemoveTwoTone } from "@mui/icons-material";
 function TeacherData() {
     const { currentUser } = useAuth();
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const [userData, setUserData] = useState({});
     const [teachersData, setTeachersData] = useState([]);
 
     useEffect(() => {
         const teacherDataRef = collection(db, "users");
-        const userRef = doc(collection(db, "users"), currentUser.uid);
         let teachers = [];
         setBackdropOpen(true);
-        getDoc(userRef).then((data) => {
-            setUserData(data.data());
-        });
+
         getDocs(teacherDataRef)
             .then((data) => {
                 data.forEach((doc) => {

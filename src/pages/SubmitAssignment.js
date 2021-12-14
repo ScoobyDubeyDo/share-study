@@ -31,11 +31,11 @@ function SubmitAssignment() {
     const [assiData, setAssiData] = useState([]);
     const [uploadedFile, setUploadedFile] = useState();
     const [userData, setUserData] = useState({});
-    const userRef = doc(collection(db, "users"), currentUser.uid);
-    const assignmentRef = collection(db, "assignments");
     const [allowSubmit, setAllowSubmit] = useState(true);
     const [isUploaded, setIsUploaded] = useState(false);
     useEffect(() => {
+        const assignmentRef = collection(db, "assignments");
+        const userRef = doc(collection(db, "users"), currentUser.uid);
         let assign = [];
         setBackdropOpen(true);
         getDoc(userRef).then((data) => {
@@ -56,7 +56,7 @@ function SubmitAssignment() {
                 setAssiData([...assign]);
                 setBackdropOpen(false);
             });
-    }, []);
+    }, [currentUser, userData.batch, userData.course]);
 
     const assignmentSelect = (e) => {
         const file = e.target.files[0];

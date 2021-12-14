@@ -35,7 +35,6 @@ function NotesStudent() {
         getDocs(noteRef)
             .then((data) => {
                 data.forEach((doc) => {
-                    // assr.push(doc.data());
                     if (
                         doc.data().batch === userData.batch &&
                         doc.data().course === userData.course
@@ -48,7 +47,7 @@ function NotesStudent() {
                 setNotesData([...assr]);
                 setBackdropOpen(false);
             });
-    }, [currentUser.uid]);
+    }, [currentUser, userData.course, userData.batch]);
 
     return (
         <Container sx={{ width: "90vw" }} disableGutters>
@@ -113,7 +112,6 @@ function NotesStudent() {
                     </Card>
                 )}
             </Box>
-            {console.log(notesData.length)}
         </Container>
     );
 }

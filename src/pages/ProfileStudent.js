@@ -8,11 +8,6 @@ import {
     CircularProgress,
     Backdrop,
     Alert,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    FormHelperText,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -35,8 +30,6 @@ function ProfileStudent() {
     const [switchButtons, setSwitchButtons] = useState(true);
     const [alertSeverity, setAlertSeverity] = useState("info");
     const [alertMessage, setAlertMessage] = useState("");
-    const [currBatch, setCurrBatch] = useState("");
-    const [currCourse, setCurrCourse] = useState("");
     const FnameRef = useRef();
     const LnameRef = useRef();
     const emailRef = useRef();
@@ -90,9 +83,6 @@ function ProfileStudent() {
                 : "enrollment number should be 11 digits long"
             : "Provide an enrollment number";
 
-        temp.batch = currBatch === "" ? "Select your Batch" : "";
-        temp.course = currCourse === "" ? "Select your Course" : "";
-
         setErrors({
             ...temp,
         });
@@ -126,8 +116,6 @@ function ProfileStudent() {
                             fName: FnameRef.current.value,
                             lName: LnameRef.current.value,
                             moNumber: Number(moNumberRef.current.value),
-                            batch: currBatch,
-                            course: currCourse,
                         },
                         { merge: true }
                     )

@@ -37,20 +37,20 @@ function NotesTeacher() {
     const [userData, setUserData] = useState({});
     const [uploadError, setUploadError] = useState({ color: "", variant: "" });
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const userRef = doc(collection(db, "users"), currentUser.uid);
     const noteRef = collection(db, "notes");
     const titleRef = useRef();
     const subjectRef = useRef();
     const descRef = useRef();
 
     useEffect(() => {
+        const userRef = doc(collection(db, "users"), currentUser.uid);
         setBackdropOpen(true);
         getDoc(userRef)
             .then((data) => {
                 setUserData(data.data());
             })
             .then(() => setBackdropOpen(false));
-    }, []);
+    }, [currentUser]);
 
     const noteSubmit = (e) => {
         const file = e.target.files[0];
@@ -120,8 +120,8 @@ function NotesTeacher() {
                             noteURL: res,
                             desc: descRef.current.value,
                         }).then(() => {
-                            
-                            setBackdropOpen(false)});
+                            setBackdropOpen(false);
+                        });
                     })
                     .catch((err) => {
                         console.log(err.message);
