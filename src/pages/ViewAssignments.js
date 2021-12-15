@@ -41,6 +41,10 @@ function ViewAssignments() {
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [assiData, setAssiData] = useState([]);
 
+    const onDelete = (id) => {
+        setAssiData(assiData.filter((doc) => doc.id !== id));
+    };
+
     useEffect(() => {
         const assignmentRef = collection(db, "assignments");
         let assign = [];
@@ -48,15 +52,16 @@ function ViewAssignments() {
         getDocs(assignmentRef)
             .then((data) => {
                 data.forEach((doc) => {
-                    assign.push({ id: doc.id, ...doc.data() });
+                    if (doc.data().uid === currentUser.uid) {
+                        assign.push({ id: doc.id, ...doc.data() });
+                    }
                 });
             })
             .then(() => {
                 setAssiData([...assign]);
                 setBackdropOpen(false);
             });
-    }, []);
-
+    }, [currentUser]);
     return (
         <Container sx={{ width: "90vw" }}>
             <CssBaseline />
@@ -69,12 +74,15 @@ function ViewAssignments() {
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Grid container spacing={2}>
-                {assiData ? (
+                {assiData.length > 0 ? (
                     assiData.map((doc, index) => {
-                        if (doc.uid === currentUser.uid) {
-                            return <AssignmentReview key={index} doc={doc} />;
-                        }
-                        return null;
+                        return (
+                            <AssignmentReview
+                                key={index}
+                                doc={doc}
+                                onDelete={onDelete}
+                            />
+                        );
                     })
                 ) : (
                     <Grid item xs={12}>
@@ -96,7 +104,7 @@ function ViewAssignments() {
     );
 }
 
-const AssignmentReview = ({ doc }) => {
+const AssignmentReview = ({ doc, onDelete }) => {
     const [expanded, setExpanded] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -137,7 +145,11 @@ const AssignmentReview = ({ doc }) => {
                         </Button>
                         <Button
                             onClick={() => {
-                                deleteDoc(fsDoc(db, "assignments", doc.id));
+                                deleteDoc(
+                                    fsDoc(db, "assignments", doc.id)
+                                ).then(() => {
+                                    onDelete(doc.id);
+                                });
                             }}
                         >
                             Delete

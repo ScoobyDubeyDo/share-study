@@ -20,22 +20,22 @@ import { PersonRemoveTwoTone } from "@mui/icons-material";
 function StudentData() {
     const { currentUser } = useAuth();
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const [teachersData, setTeachersData] = useState([]);
+    const [studentsData, setStudentsData] = useState([]);
 
     useEffect(() => {
-        const teacherDataRef = collection(db, "users");
-        let teachers = [];
+        const studentDataRef = collection(db, "users");
+        let students = [];
         setBackdropOpen(true);
-        getDocs(teacherDataRef)
+        getDocs(studentDataRef)
             .then((data) => {
                 data.forEach((doc) => {
                     if (doc.data().role === "student") {
-                        teachers.push({ id: doc.id, ...doc.data() });
+                        students.push({ id: doc.id, ...doc.data() });
                     }
                 });
             })
             .then(() => {
-                setTeachersData([...teachers]);
+                setStudentsData([...students]);
                 setBackdropOpen(false);
             });
     }, [currentUser.uid]);
@@ -55,7 +55,9 @@ function StudentData() {
                     <TableHead>
                         <TableRow>
                             <TableCell align="left">Sr. NO.</TableCell>
-                            <TableCell>Teacher Name</TableCell>
+                            <TableCell>Student Name</TableCell>
+                            <TableCell align="left">Course</TableCell>
+                            <TableCell align="left">Batch</TableCell>
                             <TableCell align="left">Email Id</TableCell>
                             <TableCell align="left">Mobile Number</TableCell>
                             <TableCell align="left">
@@ -65,9 +67,9 @@ function StudentData() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {teachersData.map((teacherData, index) => (
+                        {studentsData.map((studentData, index) => (
                             <TableRow
-                                key={teacherData.email}
+                                key={studentData.email}
                                 sx={{
                                     "&:last-child td, &:last-child th": {
                                         border: 0,
@@ -76,16 +78,22 @@ function StudentData() {
                             >
                                 <TableCell align="left">{index + 1}</TableCell>
                                 <TableCell component="th" scope="row">
-                                    {`${teacherData.fName} ${teacherData.lName}`}
+                                    {`${studentData.fName} ${studentData.lName}`}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {teacherData.email}
+                                    {studentData.course}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {teacherData.moNumber}
+                                    {studentData.batch}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {teacherData.enNumber}
+                                    {studentData.email}
+                                </TableCell>
+                                <TableCell align="left">
+                                    {studentData.moNumber}
+                                </TableCell>
+                                <TableCell align="left">
+                                    {studentData.enNumber}
                                 </TableCell>
                                 <TableCell align="left">
                                     {
@@ -93,7 +101,7 @@ function StudentData() {
                                             endIcon={<PersonRemoveTwoTone />}
                                             color="warning"
                                             onClick={() => {
-                                                console.log(teacherData.id);
+                                                console.log(studentData.id);
                                             }}
                                         >
                                             Delete User
