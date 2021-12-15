@@ -18,6 +18,7 @@ import {
     Typography,
     CircularProgress,
     Backdrop,
+    Alert,
 } from "@mui/material";
 import { storage, db } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -37,6 +38,8 @@ function NotesTeacher() {
     const [userData, setUserData] = useState({});
     const [uploadError, setUploadError] = useState({ color: "", variant: "" });
     const [backdropOpen, setBackdropOpen] = useState(false);
+    const [alertSeverity, setAlertSeverity] = useState("info");
+    const [alertMessage, setAlertMessage] = useState("");
     const noteRef = collection(db, "notes");
     const titleRef = useRef();
     const subjectRef = useRef();
@@ -58,6 +61,11 @@ function NotesTeacher() {
             setUploadedFile(file);
             setFileName(file.name);
         }
+    };
+
+    const handleAlert = (severity, message) => {
+        setAlertMessage(message);
+        setAlertSeverity(severity);
     };
 
     const validate = () => {
@@ -108,9 +116,9 @@ function NotesTeacher() {
                 storage,
                 `Notes/${userData.fName}_${titleRef.current.value}_${uploadedFile.name}`
             );
-            uploadBytes(fileRef, uploadedFile).then((snapshot) => {
-                getDownloadURL(snapshot.ref)
-                    .then((res) => {
+            uploadBytes(fileRef, uploadedFile)
+                .then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((res) => {
                         addDoc(noteRef, {
                             teacherName: `${userData.fName} ${userData.lName}`,
                             batch: currBatch,
@@ -120,13 +128,22 @@ function NotesTeacher() {
                             noteURL: res,
                             desc: descRef.current.value,
                         }).then(() => {
+                            titleRef.current.value = "";
+                            subjectRef.current.value = "";
+                            descRef.current.value = "";
+                            setCurrBatch("");
+                            setCurrCourse("");
+                            setUploadedFile(undefined);
+                            setFileName("");
                             setBackdropOpen(false);
+                            handleAlert(
+                                "success",
+                                "Note uploaded successfully"
+                            );
                         });
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
                     });
-            });
+                })
+                .catch((err) => handleAlert("error", err.message));
         }
     };
 
@@ -147,6 +164,14 @@ function NotesTeacher() {
                 onSubmit={handleSubmit}
                 sx={{ mt: 3 }}
             >
+                {alertMessage && (
+                    <Alert
+                        sx={{ mb: 2 }}
+                        variant="filled"
+                        severity={alertSeverity}
+                        children={alertMessage}
+                    />
+                )}
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -258,7 +283,11 @@ function NotesTeacher() {
                         <Typography
                             color={uploadError.color ? uploadError.color : ""}
                         >
-                            {fileName && `You selected:- ${fileName}`}
+                            {/* {fileName && `You selected:- ${fileName}`} */}
+                            {fileName &&
+                                (uploadError.color
+                                    ? fileName
+                                    : `You selected:- ${fileName}`)}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
