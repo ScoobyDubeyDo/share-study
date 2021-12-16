@@ -69,6 +69,7 @@ function UploadAssignment() {
     };
 
     const validate = () => {
+        setAlertMessage("");
         let temp = {};
         temp.nTitle = titleRef.current.value ? "" : "Provide a title";
 
@@ -109,7 +110,6 @@ function UploadAssignment() {
     const handleSubmit = (event) => {
         event.preventDefault();
         if (validate()) {
-            setAlertMessage("");
             setBackdropOpen(true);
             const fileRef = ref(
                 storage,
@@ -139,7 +139,7 @@ function UploadAssignment() {
                             setBackdropOpen(false);
                             handleAlert(
                                 "success",
-                                "Note uploaded successfully"
+                                "Assignment uploaded successfully"
                             );
                         });
                     });
