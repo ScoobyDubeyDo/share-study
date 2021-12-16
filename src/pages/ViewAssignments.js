@@ -168,6 +168,7 @@ const AssignmentReview = ({ doc, onDelete }) => {
                     <Button
                         href={doc.assignnmentURL}
                         component="a"
+                        target="_blank"
                         size="small"
                         endIcon={<AssignmentTurnedInTwoTone />}
                         sx={{ px: "8px", py: "6px" }}
@@ -196,7 +197,11 @@ const AssignmentReview = ({ doc, onDelete }) => {
                 <Collapse
                     in={expanded}
                     timeout="auto"
-                    sx={{ backgroundColor: blueGrey[50] }}
+                    sx={{
+                        backgroundColor: blueGrey[50],
+                        overflow: "auto",
+                        maxHeight: "50vh",
+                    }}
                 >
                     <Masonry
                         columns={{ xs: 1, sm: 2 }}
@@ -210,6 +215,7 @@ const AssignmentReview = ({ doc, onDelete }) => {
                             return (
                                 <Button
                                     variant="contained"
+                                    target="_blank"
                                     href={data.submissionURL}
                                     component="a"
                                     key={`${index}${data.enNumber}`}

@@ -88,8 +88,8 @@ function ProfileTeacher() {
         return Object.values(temp).every((x) => x === "");
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
         if (validate()) {
             setBackdropOpen(true);
             reAuthenticate(passwordRef.current.value)

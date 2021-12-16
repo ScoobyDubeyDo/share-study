@@ -145,7 +145,6 @@ function Navbar({ children }) {
                 <>
                     {role === "admin" && (
                         <>
-                            {" "}
                             <ListItemButton
                                 onClick={() => {
                                     setMobileOpen(false);

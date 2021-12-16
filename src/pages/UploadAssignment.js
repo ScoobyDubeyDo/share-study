@@ -18,6 +18,7 @@ import {
     Typography,
     CircularProgress,
     Backdrop,
+    Alert,
 } from "@mui/material";
 import { storage, db } from "../utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -37,6 +38,8 @@ function UploadAssignment() {
     const [userData, setUserData] = useState({});
     const [uploadError, setUploadError] = useState({ color: "", variant: "" });
     const [backdropOpen, setBackdropOpen] = useState(false);
+    const [alertSeverity, setAlertSeverity] = useState("info");
+    const [alertMessage, setAlertMessage] = useState("");
     const assignmentRef = collection(db, "assignments");
     const titleRef = useRef();
     const subjectRef = useRef();
@@ -51,6 +54,11 @@ function UploadAssignment() {
             })
             .then(() => setBackdropOpen(false));
     }, [currentUser]);
+
+    const handleAlert = (severity, message) => {
+        setAlertMessage(message);
+        setAlertSeverity(severity);
+    };
 
     const assignmentSubmit = (e) => {
         const file = e.target.files[0];
@@ -68,15 +76,13 @@ function UploadAssignment() {
 
         temp.course = currCourse === "" ? "Select your Course" : "";
 
-        temp.file = uploadedFile ? "" : "Upload a file";
-
         temp.subject = subjectRef.current.value ? "" : "Provide a subject name";
 
         temp.desc =
             descRef.current.value.length <= 150 &&
             descRef.current.value.length >= 10
-                ? descRef.current.value.includes("  ")
-                    ? "Description can't be empty"
+                ? descRef.current.value.includes("    ")
+                    ? "Description should not contain empty spaces"
                     : ""
                 : "Description must be between 10 and 150 characters";
 
@@ -103,17 +109,17 @@ function UploadAssignment() {
     const handleSubmit = (event) => {
         event.preventDefault();
         if (validate()) {
+            setAlertMessage("");
             setBackdropOpen(true);
             const fileRef = ref(
                 storage,
                 `Assignment/${userData.fName}_${titleRef.current.value}_${uploadedFile.name}`
             );
-            uploadBytes(fileRef, uploadedFile).then((snapshot) => {
-                getDownloadURL(snapshot.ref)
-                    .then((res) => {
+            uploadBytes(fileRef, uploadedFile)
+                .then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((res) => {
                         addDoc(assignmentRef, {
                             teacherName: `${userData.fName} ${userData.lName}`,
-                            // emID: userData.emID,
                             uid: currentUser.uid,
                             batch: currBatch,
                             course: currCourse,
@@ -122,12 +128,25 @@ function UploadAssignment() {
                             desc: descRef.current.value,
                             assignnmentURL: res,
                             submissionData: [],
-                        }).then(() => setBackdropOpen(false));
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
+                        }).then(() => {
+                            titleRef.current.value = "";
+                            subjectRef.current.value = "";
+                            descRef.current.value = "";
+                            setCurrBatch("");
+                            setCurrCourse("");
+                            setUploadedFile(undefined);
+                            setFileName("");
+                            setBackdropOpen(false);
+                            handleAlert(
+                                "success",
+                                "Note uploaded successfully"
+                            );
+                        });
                     });
-            });
+                })
+                .catch((err) => {
+                    handleAlert("error", err.message);
+                });
         }
     };
 
@@ -148,6 +167,15 @@ function UploadAssignment() {
                 onSubmit={handleSubmit}
                 sx={{ mt: 3 }}
             >
+                {alertMessage && (
+                    <Alert
+                        sx={{ mb: 2 }}
+                        variant="filled"
+                        severity={alertSeverity}
+                        children={alertMessage}
+                        onClose={() => setAlertMessage("")}
+                    />
+                )}
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -259,7 +287,10 @@ function UploadAssignment() {
                         <Typography
                             color={uploadError.color ? uploadError.color : ""}
                         >
-                            {fileName && `You selected:- ${fileName}`}
+                            {fileName &&
+                                (fileName === "Upload a file"
+                                    ? fileName
+                                    : `You selected:- ${fileName}`)}
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>

@@ -283,9 +283,8 @@ function NotesTeacher() {
                         <Typography
                             color={uploadError.color ? uploadError.color : ""}
                         >
-                            {/* {fileName && `You selected:- ${fileName}`} */}
                             {fileName &&
-                                (uploadError.color
+                                (fileName === "Upload a file"
                                     ? fileName
                                     : `You selected:- ${fileName}`)}
                         </Typography>
