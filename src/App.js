@@ -26,7 +26,6 @@ function App() {
     }, [dark]);
 
     const handleMode = () => {
-        console.log("here", dark);
         setDark(!dark);
     };
 

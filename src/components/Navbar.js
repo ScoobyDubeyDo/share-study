@@ -12,7 +12,6 @@ import {
     ListItemIcon,
     Toolbar,
     Typography,
-    Button,
 } from "@mui/material";
 import {
     MenuBookTwoTone,
@@ -27,7 +26,7 @@ import {
     LightModeTwoTone,
     DarkModeTwoTone,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/banner.png";
 import { useHistory, useLocation } from "react-router-dom";
@@ -38,17 +37,33 @@ const drawerWidth = 240;
 function Navbar({ children, handleMode, mode }) {
     const role = useRole();
     const history = useHistory();
+    const location = useLocation();
     const { signout } = useAuth();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [headerTitle, setHeaderTitle] = useState("Profile");
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+    const currentPath = location.pathname;
 
-    let title = "Profile";
-    // get current path name
-    // run a loop to check title mapped to pathname
-    // title=matchedPathName
+    useEffect(() => {
+        const title = {
+            "/student-data": "Student Data",
+            "/teacher-data": "Teacher Data",
+            "/view-assignment": "View Assignments",
+            "/upload-assignment": "Upload Assignment",
+            "/submit-assignment": "Assignments",
+            "/notes": "Notes",
+            "/": "Profile",
+        };
+
+        Object.keys(title).forEach((path) => {
+            if (currentPath === path) {
+                setHeaderTitle(title[path]);
+                return;
+            }
+        });
+    }, [currentPath]);
 
     const drawer = (
         <div>
@@ -60,15 +75,10 @@ function Navbar({ children, handleMode, mode }) {
             </Toolbar>
             <Divider />
             <List>
-                {/* <IconButton onClick={handleMode}>
-                    {mode ? <DarkModeTwoTone /> : <LightModeTwoTone />}
-                </IconButton> */}
-
                 <ListItemButton
                     onClick={() => {
                         setMobileOpen(false);
                         history.push("/");
-                        setHeaderTitle("Profile");
                     }}
                     selected={headerTitle === "Profile" ? true : false}
                 >
@@ -84,7 +94,6 @@ function Navbar({ children, handleMode, mode }) {
                             onClick={() => {
                                 setMobileOpen(false);
                                 history.push("/notes");
-                                setHeaderTitle("Notes");
                             }}
                             selected={headerTitle === "Notes" ? true : false}
                         >
@@ -101,7 +110,6 @@ function Navbar({ children, handleMode, mode }) {
                             onClick={() => {
                                 setMobileOpen(false);
                                 history.push("/submit-assignment");
-                                setHeaderTitle("Assignments");
                             }}
                             selected={
                                 headerTitle === "Assignments" ? true : false
@@ -121,7 +129,6 @@ function Navbar({ children, handleMode, mode }) {
                                 onClick={() => {
                                     setMobileOpen(false);
                                     history.push("/upload-assignment");
-                                    setHeaderTitle("Upload Assignment");
                                 }}
                                 selected={
                                     headerTitle === "Upload Assignment"
@@ -138,7 +145,6 @@ function Navbar({ children, handleMode, mode }) {
                                 onClick={() => {
                                     setMobileOpen(false);
                                     history.push("/view-assignment");
-                                    setHeaderTitle("View Assignments");
                                 }}
                                 selected={
                                     headerTitle === "View Assignments"
@@ -161,7 +167,6 @@ function Navbar({ children, handleMode, mode }) {
                                 onClick={() => {
                                     setMobileOpen(false);
                                     history.push("/teacher-data");
-                                    setHeaderTitle("Teacher Data");
                                 }}
                                 selected={
                                     headerTitle === "Teacher Data"
@@ -178,7 +183,6 @@ function Navbar({ children, handleMode, mode }) {
                                 onClick={() => {
                                     setMobileOpen(false);
                                     history.push("/student-data");
-                                    setHeaderTitle("Student Data");
                                 }}
                                 selected={
                                     headerTitle === "Student Data"
