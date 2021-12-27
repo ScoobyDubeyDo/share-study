@@ -14,14 +14,28 @@ import ViewAssignments from "./pages/ViewAssignments";
 import SubmitAssignment from "./pages/SubmitAssignment";
 import TeacherData from "./pages/TeacherData";
 import StudentData from "./pages/StudentData";
-
-const theme = createTheme({
-    palette: {
-        mode: "dark",
-    },
-});
+import { useEffect, useState } from "react";
 
 function App() {
+    const [dark, setDark] = useState(
+        localStorage.getItem("dark-mode") === "true"
+    );
+
+    useEffect(() => {
+        localStorage.setItem("dark-mode", dark);
+    }, [dark]);
+
+    const handleMode = () => {
+        console.log("here", dark);
+        setDark(!dark);
+    };
+
+    const theme = createTheme({
+        palette: {
+            mode: dark ? "dark" : "light",
+        },
+    });
+
     return (
         <div className="App">
             <ThemeProvider theme={theme}>
@@ -40,9 +54,13 @@ function App() {
                         <ProtectedRoute
                             exact
                             path="/"
-                            render={(props) => {
+                            render={() => {
                                 return (
-                                    <Navbar children={<Profile />} {...props} />
+                                    <Navbar
+                                        children={<Profile />}
+                                        handleMode={handleMode}
+                                        mode={dark}
+                                    />
                                 );
                             }}
                         />
@@ -59,20 +77,25 @@ function App() {
                         <ProtectedRoute
                             exact
                             path="/notes"
-                            render={(props) => {
+                            render={() => {
                                 return (
-                                    <Navbar children={<Notes />} {...props} />
+                                    <Navbar
+                                        children={<Notes />}
+                                        handleMode={handleMode}
+                                        mode={dark}
+                                    />
                                 );
                             }}
                         />
                         <ProtectedRoute
                             exact
                             path="/upload-assignment"
-                            render={(props) => {
+                            render={() => {
                                 return (
                                     <Navbar
                                         children={<UploadAssignment />}
-                                        {...props}
+                                        handleMode={handleMode}
+                                        mode={dark}
                                     />
                                 );
                             }}
@@ -80,11 +103,12 @@ function App() {
                         <ProtectedRoute
                             exact
                             path="/view-assignment"
-                            render={(props) => {
+                            render={() => {
                                 return (
                                     <Navbar
                                         children={<ViewAssignments />}
-                                        {...props}
+                                        handleMode={handleMode}
+                                        mode={dark}
                                     />
                                 );
                             }}
@@ -92,11 +116,12 @@ function App() {
                         <ProtectedRoute
                             exact
                             path="/submit-assignment"
-                            render={(props) => {
+                            render={() => {
                                 return (
                                     <Navbar
                                         children={<SubmitAssignment />}
-                                        {...props}
+                                        handleMode={handleMode}
+                                        mode={dark}
                                     />
                                 );
                             }}
@@ -104,11 +129,12 @@ function App() {
                         <ProtectedRoute
                             exact
                             path="/teacher-data"
-                            render={(props) => {
+                            render={() => {
                                 return (
                                     <Navbar
                                         children={<TeacherData />}
-                                        {...props}
+                                        handleMode={handleMode}
+                                        mode={dark}
                                     />
                                 );
                             }}
@@ -116,11 +142,12 @@ function App() {
                         <ProtectedRoute
                             exact
                             path="/student-data"
-                            render={(props) => {
+                            render={() => {
                                 return (
                                     <Navbar
                                         children={<StudentData />}
-                                        {...props}
+                                        handleMode={handleMode}
+                                        mode={dark}
                                     />
                                 );
                             }}

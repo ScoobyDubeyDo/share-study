@@ -12,6 +12,7 @@ import {
     ListItemIcon,
     Toolbar,
     Typography,
+    Button,
 } from "@mui/material";
 import {
     MenuBookTwoTone,
@@ -23,16 +24,18 @@ import {
     UploadFileTwoTone,
     BusinessCenterTwoTone,
     BackpackTwoTone,
+    LightModeTwoTone,
+    DarkModeTwoTone,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import logo from "../images/banner.png";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import useRole from "../hooks/useRole";
 
 const drawerWidth = 240;
 
-function Navbar({ children }) {
+function Navbar({ children, handleMode, mode }) {
     const role = useRole();
     const history = useHistory();
     const { signout } = useAuth();
@@ -41,6 +44,11 @@ function Navbar({ children }) {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    let title = "Profile";
+    // get current path name
+    // run a loop to check title mapped to pathname
+    // title=matchedPathName
 
     const drawer = (
         <div>
@@ -52,6 +60,10 @@ function Navbar({ children }) {
             </Toolbar>
             <Divider />
             <List>
+                {/* <IconButton onClick={handleMode}>
+                    {mode ? <DarkModeTwoTone /> : <LightModeTwoTone />}
+                </IconButton> */}
+
                 <ListItemButton
                     onClick={() => {
                         setMobileOpen(false);
@@ -189,6 +201,13 @@ function Navbar({ children }) {
                     <ListItemText primary={"Log out"} />
                 </ListItemButton>
             </List>
+            <Divider />
+            <ListItemButton onClick={handleMode}>
+                <ListItemIcon>
+                    {mode ? <DarkModeTwoTone /> : <LightModeTwoTone />}
+                </ListItemIcon>
+                <ListItemText primary={`Theme: ${mode ? "Dark" : "Light"}`} />
+            </ListItemButton>
         </div>
     );
     return (

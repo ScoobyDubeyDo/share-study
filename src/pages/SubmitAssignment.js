@@ -234,7 +234,6 @@ function SubmitAssignment() {
                         );
                     })
                 ) : (
-                    <>
                         <Grid item xs={12}>
                             <Card>
                                 <CardContent>
@@ -250,7 +249,6 @@ function SubmitAssignment() {
                                 </CardContent>
                             </Card>
                         </Grid>
-                    </>
                 )}
             </Grid>
         </Container>
