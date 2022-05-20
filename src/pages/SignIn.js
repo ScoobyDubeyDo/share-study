@@ -10,6 +10,11 @@ import {
     Container,
     Alert,
     useMediaQuery,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    FormHelperText,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useTheme } from "@mui/material/styles";
@@ -27,9 +32,18 @@ export default function SignIn() {
     const passwordRef = useRef();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
+    const [guest, setGuest] = useState("");
     const [alertSeverity, setAlertSeverity] = useState("info");
     const [alertMessage, setAlertMessage] = useState("");
     const mounted = useMounted();
+
+    console.log(guest);
+
+    const handleGuest = e => {
+        setGuest(e.target.value);
+        emailRef.current.value = e.target.value;
+        passwordRef.current.value = "zzzzzzzz";
+    };
 
     const validate = () => {
         let temp = {};
@@ -50,7 +64,7 @@ export default function SignIn() {
             ...temp,
         });
 
-        return Object.values(temp).every((x) => x === "");
+        return Object.values(temp).every(x => x === "");
     };
 
     const handleAlert = (severity, message) => {
@@ -58,7 +72,7 @@ export default function SignIn() {
         setAlertSeverity(severity);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         event.preventDefault();
         if (validate()) {
             setIsSubmitting(true);
@@ -66,7 +80,7 @@ export default function SignIn() {
                 .then(() => {
                     history.push("/");
                 })
-                .catch((err) => handleAlert("error", err.message))
+                .catch(err => handleAlert("error", err.message))
                 .finally(() => mounted.current && setIsSubmitting(false));
         }
     };
@@ -78,8 +92,7 @@ export default function SignIn() {
                 height: "95vh",
                 justifyContent: "center",
                 alignItems: "center",
-            }}
-        >
+            }}>
             <Container fixed component="main" maxWidth="sm">
                 <CssBaseline />
                 <Box
@@ -88,8 +101,7 @@ export default function SignIn() {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                    }}
-                >
+                    }}>
                     <Avatar src={logo} sx={{ m: 1 }} />
                     <Typography component="h1" variant="h5">
                         Sign in
@@ -106,8 +118,7 @@ export default function SignIn() {
                         component="form"
                         onSubmit={handleSubmit}
                         noValidate
-                        sx={{ mt: 3, width: "100%" }}
-                    >
+                        sx={{ mt: 3, width: "100%" }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField
@@ -148,10 +159,32 @@ export default function SignIn() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            loading={isSubmitting}
-                        >
+                            loading={isSubmitting}>
                             Sign In
                         </LoadingButton>
+                        <FormControl fullWidth variant="filled">
+                            <InputLabel id="demo-simple-select-label">
+                                Guest Sign In
+                            </InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={guest}
+                                onChange={handleGuest}>
+                                <MenuItem value={"student1@gmail.com"}>
+                                    student 1
+                                </MenuItem>
+                                <MenuItem value={"student2@gmail.com"}>
+                                    student 2
+                                </MenuItem>
+                                <MenuItem value={"teacher1@gmail.com"}>
+                                    teacher 1
+                                </MenuItem>
+                            </Select>
+                            <FormHelperText>
+                                Select any user any click the sign in button
+                            </FormHelperText>
+                        </FormControl>
                         <Grid container>
                             <Grid item xs>
                                 <Link
@@ -161,8 +194,7 @@ export default function SignIn() {
                                     variant="body2"
                                     onClick={() => {
                                         history.push("/forgot-password");
-                                    }}
-                                >
+                                    }}>
                                     {"Forgot password?"}
                                 </Link>
                             </Grid>
@@ -174,8 +206,7 @@ export default function SignIn() {
                                     variant="body2"
                                     onClick={() => {
                                         history.push("/signup");
-                                    }}
-                                >
+                                    }}>
                                     {"Need an account? Sign Up"}
                                 </Link>
                             </Grid>
