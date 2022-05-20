@@ -39,10 +39,9 @@ function ProfileStudent() {
     const theme = useTheme();
     const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
     const userRef = doc(collection(db, "users"), currentUser.uid);
-
     useEffect(() => {
         setBackdropOpen(true);
-        getDoc(userRef).then((data) => {
+        getDoc(userRef).then(data => {
             setUserData(data.data());
             setBackdropOpen(false);
         });
@@ -87,10 +86,10 @@ function ProfileStudent() {
             ...temp,
         });
 
-        return Object.values(temp).every((x) => x === "");
+        return Object.values(temp).every(x => x === "");
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         event.preventDefault();
         if (validate()) {
             setBackdropOpen(true);
@@ -104,7 +103,7 @@ function ProfileStudent() {
                                     "Check your inbox for email verification"
                                 );
                             })
-                            .catch((err) => {
+                            .catch(err => {
                                 handleAlert("error", err.message);
                             });
                     }
@@ -125,10 +124,10 @@ function ProfileStudent() {
                                 "Profile updated successfully"
                             );
                         })
-                        .catch((err) => handleAlert("error", err.message))
+                        .catch(err => handleAlert("error", err.message))
                         .finally(setBackdropOpen(false));
                 })
-                .catch((err) => {
+                .catch(err => {
                     handleAlert("error", err.message);
                 })
                 .finally(setBackdropOpen(false));
@@ -141,10 +140,9 @@ function ProfileStudent() {
                     <CssBaseline />
                     <Backdrop
                         sx={{
-                            zIndex: (theme) => theme.zIndex.drawer + 1,
+                            zIndex: theme => theme.zIndex.drawer + 1,
                         }}
-                        open={backdropOpen}
-                    >
+                        open={backdropOpen}>
                         <CircularProgress color="inherit" />
                     </Backdrop>
                     <Box maxWidth="md" sx={{ m: "auto" }}>
@@ -160,8 +158,7 @@ function ProfileStudent() {
                         <Box
                             component="form"
                             noValidate
-                            onSubmit={handleSubmit}
-                        >
+                            onSubmit={handleSubmit}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
@@ -304,8 +301,7 @@ function ProfileStudent() {
                                 <Grid
                                     item
                                     xs={12}
-                                    sx={{ textAlign: { sm: "end" } }}
-                                >
+                                    sx={{ textAlign: { sm: "end" } }}>
                                     {switchButtons ? (
                                         <Button
                                             variant="contained"
@@ -318,8 +314,7 @@ function ProfileStudent() {
                                                 setSwitchButtons(
                                                     !switchButtons
                                                 );
-                                            }}
-                                        >
+                                            }}>
                                             Edit Profile
                                         </Button>
                                     ) : (
@@ -335,8 +330,7 @@ function ProfileStudent() {
                                                         !switchButtons
                                                     );
                                                 }
-                                            }}
-                                        >
+                                            }}>
                                             Save Profile
                                         </Button>
                                     )}

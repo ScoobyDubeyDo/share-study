@@ -38,12 +38,12 @@ function SubmitAssignment() {
         const userRef = doc(collection(db, "users"), currentUser.uid);
         let assign = [];
         setBackdropOpen(true);
-        getDoc(userRef).then((data) => {
+        getDoc(userRef).then(data => {
             setUserData(data.data());
         });
         getDocs(assignmentRef)
-            .then((data) => {
-                data.forEach((doc) => {
+            .then(data => {
+                data.forEach(doc => {
                     if (
                         doc.data().batch === userData.batch &&
                         doc.data().course === userData.course
@@ -58,7 +58,7 @@ function SubmitAssignment() {
             });
     }, [currentUser, userData.batch, userData.course]);
 
-    const assignmentSelect = (e) => {
+    const assignmentSelect = e => {
         const file = e.target.files[0];
         if (file) {
             setUploadedFile(file);
@@ -73,9 +73,9 @@ function SubmitAssignment() {
             `Assignment/${userData.fName}_${userData.enNumber}_${uploadedFile.name}`
         );
         const assignmentUploadRef = doc(db, "assignments", docID);
-        uploadBytes(fileRef, uploadedFile).then((snapshot) => {
+        uploadBytes(fileRef, uploadedFile).then(snapshot => {
             getDownloadURL(snapshot.ref)
-                .then((res) => {
+                .then(res => {
                     setDoc(
                         assignmentUploadRef,
                         {
@@ -94,27 +94,25 @@ function SubmitAssignment() {
                         setIsUploaded(true);
                     });
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err.message);
                 });
         });
     };
-    console.log(assiData);
 
     return (
         <Container sx={{ width: "90vw" }}>
             <CssBaseline />
             <Backdrop
                 sx={{
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                    zIndex: theme => theme.zIndex.drawer + 1,
                 }}
-                open={backdropOpen}
-            >
+                open={backdropOpen}>
                 <CircularProgress color="inherit" />
             </Backdrop>
             <Grid container spacing={2}>
                 {assiData.length > 0 ? (
-                    assiData.map((doc) => {
+                    assiData.map(doc => {
                         return (
                             <Grid key={doc.id} item xs={12}>
                                 <Card>
@@ -122,15 +120,13 @@ function SubmitAssignment() {
                                         <Typography
                                             variant="h5"
                                             color="text.secondary"
-                                            gutterBottom
-                                        >
+                                            gutterBottom>
                                             {doc.title}
                                         </Typography>
                                         <Typography
                                             variant="body2"
                                             gutterBottom
-                                            color="text.secondary"
-                                        >
+                                            color="text.secondary">
                                             {`${doc.teacherName} • ${doc.subject}`}
                                         </Typography>
                                         <Typography variant="body1">
@@ -138,7 +134,7 @@ function SubmitAssignment() {
                                         </Typography>
                                     </CardContent>
                                     {!doc.submissionData.some(
-                                        (e) => e.enNumber === userData.enNumber
+                                        e => e.enNumber === userData.enNumber
                                     ) ? (
                                         <CardActions
                                             sx={{
@@ -147,8 +143,7 @@ function SubmitAssignment() {
                                                 display: isUploaded
                                                     ? "none"
                                                     : "",
-                                            }}
-                                        >
+                                            }}>
                                             <Grid container spacing={2}>
                                                 <Grid item xs={12}>
                                                     <Button
@@ -163,8 +158,7 @@ function SubmitAssignment() {
                                                         sx={{
                                                             px: "8px",
                                                             py: "6px",
-                                                        }}
-                                                    >
+                                                        }}>
                                                         View assignment
                                                     </Button>
                                                 </Grid>
@@ -176,7 +170,7 @@ function SubmitAssignment() {
                                                         }}
                                                         id="noteFile"
                                                         type="file"
-                                                        onChange={(e) =>
+                                                        onChange={e =>
                                                             assignmentSelect(e)
                                                         }
                                                     />
@@ -189,15 +183,14 @@ function SubmitAssignment() {
                                                                 <FilePresentTwoTone />
                                                             }
                                                             component="span"
-                                                            color="info"
-                                                        >
+                                                            color="info">
                                                             Select
                                                         </Button>
                                                     </FormLabel>
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <Button
-                                                        onClick={(e) => {
+                                                        onClick={e => {
                                                             handleSubmit(
                                                                 e,
                                                                 doc.id
@@ -208,8 +201,7 @@ function SubmitAssignment() {
                                                             <FileUploadTwoTone />
                                                         }
                                                         type="submit"
-                                                        disabled={allowSubmit}
-                                                    >
+                                                        disabled={allowSubmit}>
                                                         Upload
                                                     </Button>
                                                 </Grid>
@@ -219,12 +211,10 @@ function SubmitAssignment() {
                                         <CardContent
                                             sx={{
                                                 bgcolor: lightGreen[100],
-                                            }}
-                                        >
+                                            }}>
                                             <Typography
                                                 variant="body1"
-                                                color="CaptionText"
-                                            >
+                                                color="CaptionText">
                                                 {"Assignment already uploaded"}
                                             </Typography>
                                         </CardContent>
@@ -234,21 +224,20 @@ function SubmitAssignment() {
                         );
                     })
                 ) : (
-                        <Grid item xs={12}>
-                            <Card>
-                                <CardContent>
-                                    <Button
-                                        disabled
-                                        fullWidth
-                                        endIcon={
-                                            <SentimentVeryDissatisfiedTwoTone />
-                                        }
-                                    >
-                                        No assignments available
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <Button
+                                    disabled
+                                    fullWidth
+                                    endIcon={
+                                        <SentimentVeryDissatisfiedTwoTone />
+                                    }>
+                                    No assignments available
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
                 )}
             </Grid>
         </Container>

@@ -8,17 +8,15 @@ function useRole() {
     const [userData, setUserData] = useState({});
 
     useEffect(() => {
-        const userRef = doc(collection(db, "users"), currentUser.uid);
-        getDoc(userRef).then((data) => {
-            setUserData(data.data());
-        });
+        if (!!currentUser?.uid) {
+            const userRef = doc(collection(db, "users"), currentUser.uid);
+            getDoc(userRef).then(data => {
+                setUserData(data.data());
+            });
+        }
+    }, [currentUser?.uid]);
 
-        return () => {
-            console.log("clean");
-        };
-    }, [currentUser.uid]);
-
-    return userData.role;
+    return userData?.role;
 }
 
 export default useRole;

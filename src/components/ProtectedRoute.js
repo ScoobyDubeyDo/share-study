@@ -13,11 +13,11 @@ function ProtectedRoute(props) {
     const [isVerified, setUserVerification] = useState(false);
 
     useEffect(() => {
-        if(currentUser){
+        if (!!currentUser) {
             const userRef = doc(collection(db, "users"), currentUser.uid);
-            getDoc(userRef).then((data) => {
+            getDoc(userRef).then(data => {
                 const uData = data.data();
-                setUserVerification(Boolean(uData.moNumber))
+                setUserVerification(Boolean(uData?.email));
             });
         }
     }, [currentUser]);

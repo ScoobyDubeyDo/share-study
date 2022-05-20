@@ -35,16 +35,17 @@ import useRole from "../hooks/useRole";
 const drawerWidth = 240;
 
 function Navbar({ children, handleMode, mode }) {
+    const location = useLocation();
+    const currentPath = location.pathname;
+
     const role = useRole();
     const history = useHistory();
-    const location = useLocation();
     const { signout } = useAuth();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [headerTitle, setHeaderTitle] = useState("Profile");
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
-    const currentPath = location.pathname;
 
     useEffect(() => {
         const title = {
@@ -57,7 +58,7 @@ function Navbar({ children, handleMode, mode }) {
             "/": "Profile",
         };
 
-        Object.keys(title).forEach((path) => {
+        Object.keys(title).forEach(path => {
             if (currentPath === path) {
                 setHeaderTitle(title[path]);
                 return;
@@ -80,8 +81,7 @@ function Navbar({ children, handleMode, mode }) {
                         setMobileOpen(false);
                         history.push("/");
                     }}
-                    selected={headerTitle === "Profile" ? true : false}
-                >
+                    selected={headerTitle === "Profile" ? true : false}>
                     <ListItemIcon>
                         <AccountBoxTwoTone />
                     </ListItemIcon>
@@ -95,8 +95,7 @@ function Navbar({ children, handleMode, mode }) {
                                 setMobileOpen(false);
                                 history.push("/notes");
                             }}
-                            selected={headerTitle === "Notes" ? true : false}
-                        >
+                            selected={headerTitle === "Notes" ? true : false}>
                             <ListItemIcon>
                                 <MenuBookTwoTone />
                             </ListItemIcon>
@@ -113,8 +112,7 @@ function Navbar({ children, handleMode, mode }) {
                             }}
                             selected={
                                 headerTitle === "Assignments" ? true : false
-                            }
-                        >
+                            }>
                             <ListItemIcon>
                                 <AssignmentTwoTone />
                             </ListItemIcon>
@@ -134,8 +132,7 @@ function Navbar({ children, handleMode, mode }) {
                                     headerTitle === "Upload Assignment"
                                         ? true
                                         : false
-                                }
-                            >
+                                }>
                                 <ListItemIcon>
                                     <UploadFileTwoTone />
                                 </ListItemIcon>
@@ -150,8 +147,7 @@ function Navbar({ children, handleMode, mode }) {
                                     headerTitle === "View Assignments"
                                         ? true
                                         : false
-                                }
-                            >
+                                }>
                                 <ListItemIcon>
                                     <AssignmentTurnedInTwoTone />
                                 </ListItemIcon>
@@ -172,8 +168,7 @@ function Navbar({ children, handleMode, mode }) {
                                     headerTitle === "Teacher Data"
                                         ? true
                                         : false
-                                }
-                            >
+                                }>
                                 <ListItemIcon>
                                     <BusinessCenterTwoTone />
                                 </ListItemIcon>
@@ -188,8 +183,7 @@ function Navbar({ children, handleMode, mode }) {
                                     headerTitle === "Student Data"
                                         ? true
                                         : false
-                                }
-                            >
+                                }>
                                 <ListItemIcon>
                                     <BackpackTwoTone />
                                 </ListItemIcon>
@@ -214,61 +208,67 @@ function Navbar({ children, handleMode, mode }) {
             </ListItemButton>
         </div>
     );
-    return (
-        <Box
-            sx={{
-                display: "flex",
-                justifyContent: "center",
-            }}
-        >
-            <CssBaseline />
-            <AppBar position="fixed">
-                <Toolbar
-                    sx={{
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <IconButton
-                        color="inherit"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                    >
-                        <MenuTwoTone />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        {headerTitle}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Box component="nav">
-                <Drawer
-                    variant="temporary"
-                    open={mobileOpen}
-                    onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
-                    sx={{
-                        "& .MuiDrawer-paper": {
-                            boxSizing: "border-box",
-                            width: drawerWidth,
-                        },
-                    }}
-                >
-                    {drawer}
-                </Drawer>
-            </Box>
+
+    if (
+        currentPath === "/" ||
+        currentPath === "/notes" ||
+        currentPath === "/student-data" ||
+        currentPath === "/view-assignment" ||
+        currentPath === "/submit-assignment" ||
+        currentPath === "/teacher-data" ||
+        currentPath === "/upload-assignment"
+    ) {
+        return (
             <Box
-                component="main"
                 sx={{
-                    p: 3,
-                }}
-            >
-                <Toolbar />
-                {children}
+                    display: "flex",
+                    justifyContent: "center",
+                }}>
+                <CssBaseline />
+                <AppBar position="fixed">
+                    <Toolbar
+                        sx={{
+                            justifyContent: "space-between",
+                        }}>
+                        <IconButton
+                            color="inherit"
+                            edge="start"
+                            onClick={handleDrawerToggle}>
+                            <MenuTwoTone />
+                        </IconButton>
+                        <Typography variant="h6" noWrap component="div">
+                            {headerTitle}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Box component="nav">
+                    <Drawer
+                        variant="temporary"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                        ModalProps={{
+                            keepMounted: true,
+                        }}
+                        sx={{
+                            "& .MuiDrawer-paper": {
+                                boxSizing: "border-box",
+                                width: drawerWidth,
+                            },
+                        }}>
+                        {drawer}
+                    </Drawer>
+                </Box>
+                <Box
+                    component="main"
+                    sx={{
+                        p: 3,
+                    }}>
+                    <Toolbar />
+                    {children}
+                </Box>
             </Box>
-        </Box>
-    );
+        );
+    } else return <>{children}</>;
 }
 
 export default Navbar;

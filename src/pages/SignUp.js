@@ -80,7 +80,7 @@ export default function SignUp() {
             ...temp,
         });
 
-        return Object.values(temp).every((x) => x === "");
+        return Object.values(temp).every(x => x === "");
     };
 
     const handleAlert = (severity, message) => {
@@ -99,12 +99,12 @@ export default function SignUp() {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         event.preventDefault();
         if (validate()) {
             setIsSubmitting(true);
             signup(emailRef.current.value, passwordRef.current.value)
-                .then((res) => {
+                .then(res => {
                     const userRef = doc(collection(db, "users"), res.user.uid);
                     if (role === "student") {
                         setDoc(userRef, {
@@ -125,7 +125,7 @@ export default function SignUp() {
                         }).then(history.push("/"));
                     }
                 })
-                .catch((err) => handleAlert("error", err.message))
+                .catch(err => handleAlert("error", err.message))
                 .finally(() => mounted.current && setIsSubmitting(false));
         }
     };
@@ -137,8 +137,7 @@ export default function SignUp() {
                 height: "95vh",
                 justifyContent: "center",
                 alignItems: "center",
-            }}
-        >
+            }}>
             <Container component="main" maxWidth="sm">
                 <CssBaseline />
                 <Box
@@ -147,8 +146,7 @@ export default function SignUp() {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                    }}
-                >
+                    }}>
                     <Avatar src={logo} sx={{ m: 1 }} />
                     <Typography component="h1" variant="h5">
                         Sign up
@@ -165,8 +163,7 @@ export default function SignUp() {
                         component="form"
                         noValidate
                         onSubmit={handleSubmit}
-                        sx={{ mt: 3 }}
-                    >
+                        sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -208,8 +205,7 @@ export default function SignUp() {
                                     exclusive
                                     color="primary"
                                     onChange={handleRole}
-                                    aria-label="text alignment"
-                                >
+                                    aria-label="text alignment">
                                     <ToggleButton value="teacher">
                                         Teacher
                                     </ToggleButton>
@@ -226,13 +222,12 @@ export default function SignUp() {
                                             size={
                                                 breakpoint ? "small" : "medium"
                                             }
-                                            error={errors.batch ? true : false}
-                                        >
+                                            error={errors.batch ? true : false}>
                                             <InputLabel>Batch</InputLabel>
                                             <Select
                                                 value={currBatch}
                                                 label="Batch"
-                                                onChange={(event) => {
+                                                onChange={event => {
                                                     setCurrBatch(
                                                         event.target.value
                                                     );
@@ -242,8 +237,7 @@ export default function SignUp() {
                                                         ? "small"
                                                         : "medium"
                                                 }
-                                                disabled={!isStudent}
-                                            >
+                                                disabled={!isStudent}>
                                                 <MenuItem value={"2019-2022"}>
                                                     2019-2022
                                                 </MenuItem>
@@ -257,8 +251,7 @@ export default function SignUp() {
                                             <FormHelperText
                                                 error={
                                                     errors.batch ? true : false
-                                                }
-                                            >
+                                                }>
                                                 {errors.batch}
                                             </FormHelperText>
                                         </FormControl>
@@ -269,13 +262,14 @@ export default function SignUp() {
                                             size={
                                                 breakpoint ? "small" : "medium"
                                             }
-                                            error={errors.course ? true : false}
-                                        >
+                                            error={
+                                                errors.course ? true : false
+                                            }>
                                             <InputLabel>Course</InputLabel>
                                             <Select
                                                 value={currCourse}
                                                 label="Course"
-                                                onChange={(event) => {
+                                                onChange={event => {
                                                     setCurrCourse(
                                                         event.target.value
                                                     );
@@ -285,8 +279,7 @@ export default function SignUp() {
                                                         ? "small"
                                                         : "medium"
                                                 }
-                                                disabled={!isStudent}
-                                            >
+                                                disabled={!isStudent}>
                                                 <MenuItem value={"B.C.A."}>
                                                     B.C.A.
                                                 </MenuItem>
@@ -294,16 +287,14 @@ export default function SignUp() {
                                                     B.Sc.IT
                                                 </MenuItem>
                                                 <MenuItem
-                                                    value={" B.Sc.IT(IMS)"}
-                                                >
+                                                    value={" B.Sc.IT(IMS)"}>
                                                     B.Sc.IT(IMS)
                                                 </MenuItem>
                                             </Select>
                                             <FormHelperText
                                                 error={
                                                     errors.course ? true : false
-                                                }
-                                            >
+                                                }>
                                                 {errors.course}
                                             </FormHelperText>
                                         </FormControl>
@@ -349,8 +340,7 @@ export default function SignUp() {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            loading={isSubmitting}
-                        >
+                            loading={isSubmitting}>
                             Sign Up
                         </LoadingButton>
                         <Grid container justifyContent="flex-end">
@@ -362,8 +352,7 @@ export default function SignUp() {
                                     variant="body2"
                                     onClick={() => {
                                         history.push("/signin");
-                                    }}
-                                >
+                                    }}>
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
